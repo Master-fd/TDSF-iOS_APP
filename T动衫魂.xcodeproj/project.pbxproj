@@ -9,11 +9,10 @@
 /* Begin PBXBuildFile section */
 		1B9AE7491CE8ACDA00BF48F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9AE7481CE8ACDA00BF48F3 /* main.m */; };
 		1B9AE74C1CE8ACDA00BF48F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9AE74B1CE8ACDA00BF48F3 /* AppDelegate.m */; };
-		1B9AE74F1CE8ACDA00BF48F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9AE74E1CE8ACDA00BF48F3 /* ViewController.m */; };
-		1B9AE7521CE8ACDA00BF48F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B9AE7501CE8ACDA00BF48F3 /* Main.storyboard */; };
 		1B9AE7541CE8ACDA00BF48F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B9AE7531CE8ACDA00BF48F3 /* Images.xcassets */; };
 		1B9AE7571CE8ACDA00BF48F3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B9AE7551CE8ACDA00BF48F3 /* LaunchScreen.xib */; };
 		1B9AE7631CE8ACDA00BF48F3 /* T___Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9AE7621CE8ACDA00BF48F3 /* T___Tests.m */; };
+		1B9AE7711CE8B07000BF48F3 /* FDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9AE7701CE8B07000BF48F3 /* FDViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,14 +31,14 @@
 		1B9AE7481CE8ACDA00BF48F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1B9AE74A1CE8ACDA00BF48F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1B9AE74B1CE8ACDA00BF48F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1B9AE74D1CE8ACDA00BF48F3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1B9AE74E1CE8ACDA00BF48F3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		1B9AE7511CE8ACDA00BF48F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1B9AE7531CE8ACDA00BF48F3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1B9AE7561CE8ACDA00BF48F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1B9AE75C1CE8ACDA00BF48F3 /* T动衫魂Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "T动衫魂Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B9AE7611CE8ACDA00BF48F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1B9AE7621CE8ACDA00BF48F3 /* T___Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "T___Tests.m"; sourceTree = "<group>"; };
+		1B9AE76F1CE8B07000BF48F3 /* FDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDViewController.h; path = Home/Controllers/FDViewController.h; sourceTree = "<group>"; };
+		1B9AE7701CE8B07000BF48F3 /* FDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDViewController.m; path = Home/Controllers/FDViewController.m; sourceTree = "<group>"; };
+		1B9AE7721CE8B17100BF48F3 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,13 +80,8 @@
 		1B9AE7451CE8ACDA00BF48F3 /* T动衫魂 */ = {
 			isa = PBXGroup;
 			children = (
-				1B9AE74A1CE8ACDA00BF48F3 /* AppDelegate.h */,
-				1B9AE74B1CE8ACDA00BF48F3 /* AppDelegate.m */,
-				1B9AE74D1CE8ACDA00BF48F3 /* ViewController.h */,
-				1B9AE74E1CE8ACDA00BF48F3 /* ViewController.m */,
-				1B9AE7501CE8ACDA00BF48F3 /* Main.storyboard */,
-				1B9AE7531CE8ACDA00BF48F3 /* Images.xcassets */,
-				1B9AE7551CE8ACDA00BF48F3 /* LaunchScreen.xib */,
+				1B9AE76D1CE8B04500BF48F3 /* Home */,
+				1B9AE76C1CE8AD7100BF48F3 /* Others */,
 				1B9AE7461CE8ACDA00BF48F3 /* Supporting Files */,
 			);
 			path = "T动衫魂";
@@ -96,8 +90,10 @@
 		1B9AE7461CE8ACDA00BF48F3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1B9AE7531CE8ACDA00BF48F3 /* Images.xcassets */,
 				1B9AE7471CE8ACDA00BF48F3 /* Info.plist */,
 				1B9AE7481CE8ACDA00BF48F3 /* main.m */,
+				1B9AE7721CE8B17100BF48F3 /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -117,6 +113,33 @@
 				1B9AE7611CE8ACDA00BF48F3 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1B9AE76C1CE8AD7100BF48F3 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				1B9AE74A1CE8ACDA00BF48F3 /* AppDelegate.h */,
+				1B9AE74B1CE8ACDA00BF48F3 /* AppDelegate.m */,
+				1B9AE7551CE8ACDA00BF48F3 /* LaunchScreen.xib */,
+			);
+			name = Others;
+			sourceTree = "<group>";
+		};
+		1B9AE76D1CE8B04500BF48F3 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				1B9AE76E1CE8B04D00BF48F3 /* Controllers */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		1B9AE76E1CE8B04D00BF48F3 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1B9AE76F1CE8B07000BF48F3 /* FDViewController.h */,
+				1B9AE7701CE8B07000BF48F3 /* FDViewController.m */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -163,6 +186,7 @@
 		1B9AE73B1CE8ACDA00BF48F3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = FD;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = asus;
 				TargetAttributes = {
@@ -199,7 +223,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B9AE7521CE8ACDA00BF48F3 /* Main.storyboard in Resources */,
 				1B9AE7571CE8ACDA00BF48F3 /* LaunchScreen.xib in Resources */,
 				1B9AE7541CE8ACDA00BF48F3 /* Images.xcassets in Resources */,
 			);
@@ -219,9 +242,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B9AE74F1CE8ACDA00BF48F3 /* ViewController.m in Sources */,
 				1B9AE74C1CE8ACDA00BF48F3 /* AppDelegate.m in Sources */,
 				1B9AE7491CE8ACDA00BF48F3 /* main.m in Sources */,
+				1B9AE7711CE8B07000BF48F3 /* FDViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,14 +267,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		1B9AE7501CE8ACDA00BF48F3 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1B9AE7511CE8ACDA00BF48F3 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		1B9AE7551CE8ACDA00BF48F3 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -347,7 +362,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/T动衫魂/PrefixHeader.pch";
 				INFOPLIST_FILE = "T动衫魂/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -357,7 +375,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/T动衫魂/PrefixHeader.pch";
 				INFOPLIST_FILE = "T动衫魂/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

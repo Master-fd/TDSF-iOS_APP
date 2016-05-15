@@ -1,27 +1,31 @@
 //
-//  ViewController.m
+//  FDViewController.m
 //  T动衫魂
 //
 //  Created by asus on 16/5/15.
 //  Copyright (c) 2016年 asus. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "FDViewController.h"
 
-@interface ViewController ()
+@interface FDViewController ()
 
 @end
 
-@implementation ViewController
+@implementation FDViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.view.backgroundColor = FDRandomColor;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+
 
 @end

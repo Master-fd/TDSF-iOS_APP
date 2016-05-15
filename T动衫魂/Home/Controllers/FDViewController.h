@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  FDViewController.h
 //  T动衫魂
 //
 //  Created by asus on 16/5/15.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface FDViewController : UIViewController
 
 @end
-

@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "FDViewController.h"
+
+
 
 @interface AppDelegate ()
 
@@ -16,7 +19,21 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    FDViewController *vc = [[FDViewController alloc] init];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    
+    UITabBarController *tabBar = [[UITabBarController alloc] init];
+    
+    [tabBar addChildViewController:nav];
+    
+    self.window.rootViewController = tabBar;
+    
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
