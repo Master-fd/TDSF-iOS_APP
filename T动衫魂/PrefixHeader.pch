@@ -10,6 +10,46 @@
 #define T____PrefixHeader_pch
 
 
-#define FDRandomColor    [UIColor colorWithRed:arc4random()/255.0 green:arc4random()/255.0 blue:arc4random()/255.0 alpha:1]
+#import "Masonry.h"
+#import "MJRefresh.h"
+#import "AFHTTPRequestOperation.h"
+#import "AFHTTPRequestOperationManager.h"
+#import "UIImageView+WebCache.h"
+#import "FDMBProgressHUB.h"
+#import "UIView+FDViewExtension.h"
+#import "NSString+FDExtension.h"
+#import "UIImageView+FDExtension.h"
+
+
+
+
+#ifdef DEBUG
+#define FDLog(...)   NSLog(@"%s, %d\n %@\n", __func__, __LINE__, [NSString stringWithFormat:__VA_ARGS__])
+#else
+#define FDLog(...)
+#endif
+
+
+
+#define FDRandomColor    [UIColor colorWithRed:(arc4random()%255)/255.0 green:(arc4random()%255)/255.0 blue:(arc4random()%255)/255.0 alpha:1]
+
+#define goodsRequireAddr   @"http://192.168.31.216:8080/MJServer/video"
+
+
+/**
+ *  主题颜色风格
+ */
+//黑色
+#define kBlackColor    [UIColor blackColor]
+//粉色
+#define kRoseColor   [UIColor colorWithRed:234/255.0 green:97/255.0 blue:202/255.0 alpha:1]
+//深灰色
+#define kDeepGreyColor   [UIColor colorWithRed:99/255.0 green:99/255.0 blue:99/255.0 alpha:1]
+//浅灰色
+#define kFrenchGreyColor  [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1]
+//白色
+#define  kWhiteColor      [UIColor whiteColor]
+
+
 
 #endif

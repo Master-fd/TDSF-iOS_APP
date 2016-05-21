@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "FDViewController.h"
+#import "FDBaseTabBarController.h"
+#import "FDBaseNavigationController.h"
+#import "FDHomeViewController.h"
 
 
 
@@ -22,17 +24,25 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    FDViewController *vc = [[FDViewController alloc] init];
+    FDHomeViewController *vc = [[FDHomeViewController alloc] init];
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    FDBaseNavigationController *nav = [[FDBaseNavigationController alloc] initWithRootViewController:vc];
+    nav.navigationBar.translucent = NO; //不透明
+    nav.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"首页" image:[UIImage imageNamed:@"icon_home_nor"] selectedImage:[UIImage imageNamed:@"icon_home_pre"]];
     
-    UITabBarController *tabBar = [[UITabBarController alloc] init];
+    
+    FDBaseTabBarController *tabBar = [[FDBaseTabBarController alloc] init];
+    tabBar.tabBar.translucent = NO;//不透明
     
     [tabBar addChildViewController:nav];
+    
+    UIViewController *vc2 = [[UIViewController alloc] init];
+    [tabBar addChildViewController:vc2];
     
     self.window.rootViewController = tabBar;
     
     [self.window makeKeyAndVisible];
+    
     
     return YES;
 }
