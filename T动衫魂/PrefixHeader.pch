@@ -17,6 +17,7 @@
 #import "UIImageView+WebCache.h"
 #import "FDMBProgressHUB.h"
 #import "UIView+FDViewExtension.h"
+#import "UIImage+FDExtension.h"
 #import "NSString+FDExtension.h"
 #import "UIImageView+FDExtension.h"
 
@@ -35,6 +36,8 @@
 
 #define goodsRequireAddr   @"http://192.168.31.216:8080/MJServer/video"
 
+#define kMyCollectPlistPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] \
+                              stringByAppendingPathComponent:@"myCollectGoods.plist"]
 
 /**
  *  主题颜色风格

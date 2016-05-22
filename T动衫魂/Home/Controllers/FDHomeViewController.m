@@ -90,6 +90,7 @@
      *  刷新最新数据
      */
     [self dropUpLoadMoreGoods];
+
 }
 
 
@@ -118,7 +119,7 @@
     params[@"username"] = @"123";
     params[@"pwd"] = @"123";
     
-    [self getGoodsRequires:params dropUp:NO];
+    [self getGoodsRequires:params dropUp:YES];
     
     [self.collectionView.mj_footer endRefreshing];
 }
@@ -141,26 +142,54 @@
     maneger.responseSerializer = [AFJSONResponseSerializer serializer];
     
     //发送请求
-    [maneger GET:goodsRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        /**
-         *  返回的就是dict， 保存到array, 开始刷新collectionview
-         */
-        NSArray *array = responseObject[@"videos"];
-        NSMutableArray *arrayM = [NSMutableArray array];
-        //字典转模型
-        for (NSDictionary *dict in array) {
-            FDGoodsModel *model = [FDGoodsModel goodsWithDict:dict];
-            [arrayM addObject:model];
-        }
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self addMoreItemForCollectionView:arrayM dropUp:direction];
-        });
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [FDMBProgressHUB showError:@"获取数据失败"];
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [maneger GET:goodsRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            /**
+             *  返回的就是dict， 保存到array, 开始刷新collectionview
+             */
+            NSArray *array = responseObject[@"videos"];
+            NSMutableArray *arrayM = [NSMutableArray array];
+            //字典转模型
+            FDLog(@"这里插入测试数据");
+            for (NSDictionary *dict in array) {
+                FDGoodsModel *model = [FDGoodsModel goodsWithDict:dict];
+                
+                model.ID = @"2";
+                model.name = @"卫衣卫衣卫衣";
+                model.price = @"156.05";
+                model.subClass = @"T";
+                model.sex = @"male";
+                model.minImageUrl1 = @"minImageUrl2";
+                model.minImageUrl2 = @"minImageUrl2";
+                model.minImageUrl3 = @"minImageUrl2";
+                model.descImageUrl1 = @"minImageUrl2";
+                model.descImageUrl2 = @"minImageUrl2";
+                model.descImageUrl3 = @"minImageUrl2";
+                model.descImageUrl4 = @"minImageUrl2";
+                model.descImageUrl5 = @"minImageUrl2";
+                model.aboutImageUrl = @"minImageUrl2";
+                model.sizeImageUrl = @"minImageUrl2";
+                model.remarkImageUrl = @"minImageUrl2";
+                
+                if (direction) {
+                    [arrayM insertObject:model atIndex:0];
+                }else{
+                    [arrayM addObject:model];
+                }
+                
+            }
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self addMoreItemForCollectionView:arrayM dropUp:direction];
+            });
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [FDMBProgressHUB showError:@"获取数据失败"];
+            });
+        }];
+    });
+
 }
 
 /**
@@ -179,6 +208,7 @@
         } else {//下拉
             [self.dataSource insertObject:model atIndex:0];
         }
+  
         
         [indexPath addObject:[NSIndexPath indexPathForItem:[self.dataSource indexOfObject:model] inSection:0]];
     }
@@ -206,6 +236,7 @@
 {
     //获取数据
     FDGoodsModel *model = self.dataSource[indexPath.row];
+    
     FDHomeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     
     cell.model = model;

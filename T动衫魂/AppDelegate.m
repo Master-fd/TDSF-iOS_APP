@@ -10,7 +10,8 @@
 #import "FDBaseTabBarController.h"
 #import "FDBaseNavigationController.h"
 #import "FDHomeViewController.h"
-
+#import "FDDiscoverViewController.h"
+#import "FDSettingViewController.h"
 
 
 @interface AppDelegate ()
@@ -24,23 +25,30 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    FDHomeViewController *vc = [[FDHomeViewController alloc] init];
+    FDHomeViewController *home = [[FDHomeViewController alloc] init];
+    FDBaseNavigationController *navhome = [[FDBaseNavigationController alloc] initWithRootViewController:home];
+    navhome.navigationBar.translucent = NO; //不透明
+    navhome.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"首页" image:[UIImage imageNamed:@"icon_home_nor"] selectedImage:[UIImage imageNamed:@"icon_home_pre"]];
     
-    FDBaseNavigationController *nav = [[FDBaseNavigationController alloc] initWithRootViewController:vc];
-    nav.navigationBar.translucent = NO; //不透明
-    nav.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"首页" image:[UIImage imageNamed:@"icon_home_nor"] selectedImage:[UIImage imageNamed:@"icon_home_pre"]];
+    FDDiscoverViewController *discover = [[FDDiscoverViewController alloc] init];
+    FDBaseNavigationController *navDiscover = [[FDBaseNavigationController alloc] initWithRootViewController:discover];
+    navDiscover.navigationBar.translucent = NO; //不透明
+    navDiscover.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"买家秀" image:[UIImage imageNamed:@"icon_find_nor"] selectedImage:[UIImage imageNamed:@"icon_find_pre"]];
     
+    FDSettingViewController *setting = [[FDSettingViewController alloc] init];
+    FDBaseNavigationController *navSetting = [[FDBaseNavigationController alloc] initWithRootViewController:setting];
+    navSetting.navigationBar.translucent = NO; //不透明
+    navSetting.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"设置" image:[UIImage imageNamed:@"icon_setting_nor"] selectedImage:[UIImage imageNamed:@"icon_setting_pre"]];
+
     
     FDBaseTabBarController *tabBar = [[FDBaseTabBarController alloc] init];
     tabBar.tabBar.translucent = NO;//不透明
     
-    [tabBar addChildViewController:nav];
-    
-    UIViewController *vc2 = [[UIViewController alloc] init];
-    [tabBar addChildViewController:vc2];
+    [tabBar addChildViewController:navhome];
+    [tabBar addChildViewController:navDiscover];
+    [tabBar addChildViewController:navSetting];
     
     self.window.rootViewController = tabBar;
-    
     [self.window makeKeyAndVisible];
     
     

@@ -15,6 +15,6 @@
 /**
  *  修改图片的size
  */
-- (UIImage *)imageWithSize:(CGSize) size;
+- (UIImage *)imageWithSize:(CGSize) size equal:(BOOL)equal;
 
 @end

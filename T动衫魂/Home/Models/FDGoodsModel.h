@@ -8,10 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
+#define kGoodsidKey      @"id"
+#define kGoodsnameKey        @"name"
+#define kGoodspriceKey        @"price"
+#define kGoodssubClassKey        @"subClass"
+#define kGoodssexKey        @"sex"
+#define kGoodsminImageUrl1Key        @"minImageUrl1"
+#define kGoodsminImageUrl2Key        @"minImageUrl2"
+#define kGoodsminImageUrl3Key        @"minImageUrl3"
+#define kGoodsdescImageUrl1Key              @"descImageUrl1"
+#define kGoodsdescImageUrl2Key              @"descImageUrl2"
+#define kGoodsdescImageUrl3Key              @"descImageUrl3"
+#define kGoodsdescImageUrl4Key              @"descImageUrl4"
+#define kGoodsdescImageUrl5Key              @"descImageUrl5"
+#define kGoodsaboutImageUrlKey              @"aboutImageUrl"
+#define kGoodssizeImageUrlKey              @"sizeImageUrl"
+#define kGoodsremarkImageUrlKey              @"remarkImageUrl"
+
+
+
 @interface FDGoodsModel : NSObject
 
 /**
- *  保存在数据库的ID
+ *  保存在服务器数据库的ID
  */
 @property (nonatomic, copy) NSString *ID;
 

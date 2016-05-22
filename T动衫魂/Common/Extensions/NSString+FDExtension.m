@@ -69,6 +69,10 @@
     }
 }
 
+
+/**
+ *  自动计算文字size
+ */
 - (CGSize)sizeWithFont:(UIFont *)font maxW:(CGFloat)maxW
 {
     NSMutableDictionary *attrs = [NSMutableDictionary dictionary];

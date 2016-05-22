@@ -26,6 +26,7 @@
 
 @implementation FDHomeCollectionViewCell
 
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -47,6 +48,7 @@
     _imageView = [[UIImageView alloc] init];
     [self.contentView addSubview:_imageView];
     _imageView.backgroundColor = [UIColor clearColor];
+    _imageView.image = [UIImage imageNamed:@"defult_placeholder"];
     
     _nameLab = [[UILabel alloc] init];
     [self.contentView addSubview:_nameLab];
