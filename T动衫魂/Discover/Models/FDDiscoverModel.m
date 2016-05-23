@@ -8,6 +8,19 @@
 
 #import "FDDiscoverModel.h"
 
+
 @implementation FDDiscoverModel
 
+- (instancetype)initWithDict:(NSDictionary *)dict
+{
+    self.content = dict[kContentKey];
+    self.imageUrl = dict[kImageUrlKey];
+    
+    return self;
+}
+
++ (instancetype)discoverWithDict:(NSDictionary *)dict
+{
+    return [[self alloc] initWithDict:dict];
+}
 @end

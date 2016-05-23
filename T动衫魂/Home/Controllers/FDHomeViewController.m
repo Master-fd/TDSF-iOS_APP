@@ -11,7 +11,14 @@
 #import "FDGoodsModel.h"
 #import "FDGoodsInfoController.h"
 #import "FDGoodsSelectBarView.h"
+#import "FDHomeNetworkTool.h"
+#import "FDSelectInfoView.h"
 
+
+/**
+ *  每次获取多少条数据
+ */
+#define kStepData         60
 
 @interface FDHomeViewController ()<UICollectionViewDelegateFlowLayout, UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -21,6 +28,27 @@
  *  数据集，每个数据都是一个goodsmodel
  */
 @property (nonatomic, strong) NSMutableArray *dataSource;
+
+/**
+ *  当前的IDstart
+ */
+@property (nonatomic, assign) NSInteger idStartNow;
+
+/**
+ *  当前的IDend
+ */
+@property (nonatomic, assign) NSInteger idEndNow;
+
+/**
+ *  当前的sex
+ */
+@property (nonatomic, copy) NSString *sexNow;
+
+/**
+ *  当前的subclass
+ */
+@property (nonatomic, copy) NSString *subClassNow;
+
 
 @end
 
@@ -35,11 +63,27 @@
     [self setupNav];
     
     [self setupViews];
+    
+    /**
+     *  刷新最新数据
+     */
+    [self dropDownLoadMoreGoods];
 }
 
 - (void)setupNav
 {
     self.navigationItem.title = @"T动班魂";
+    
+    //监听通知
+    NSNotificationCenter *defaults = [NSNotificationCenter defaultCenter];
+    [defaults addObserver:self selector:@selector(observerFromSelectGoods:) name:kSelectGoodsNotification object:nil];
+}
+
+- (void)dealloc
+{
+    //移除监听
+    NSNotificationCenter *defaults = [NSNotificationCenter defaultCenter];
+    [defaults removeObserver:self];
 }
 
 - (void)setupViews
@@ -80,31 +124,29 @@
 
 
 /**
- *  view即将显示
- */
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    /**
-     *  刷新最新数据
-     */
-    [self dropUpLoadMoreGoods];
-
-}
-
-
-/**
  *  下拉刷新最新数据
  */
 - (void)dropDownLoadMoreGoods
 {
     //封装请求参数
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"username"] = @"123";
-    params[@"pwd"] = @"123";
+    params[kParamIdStart] = @1;
+    params[kParamIdEnd] = [NSString stringWithFormat:@"%d", kStepData];
+    params[kParamSex] = self.sexNow!=nil ? self.sexNow:[NSString stringWithFormat:@"%ld", sexAll];
+    params[kParamSubClass] = self.subClassNow!=nil ? self.subClassNow:[NSString stringWithFormat:@"%ld", subClassAll];
     
-    [self getGoodsRequires:params dropUp:NO];
+    //复位idstart和idend,
+    self.idStartNow = kStepData;
+    self.idEndNow = kStepData+kStepData;
+    FDLog(@"%@", params);
+    __weak typeof(self) _weakSelf = self;
+    [FDHomeNetworkTool getGoodsRequires:params dropUp:NO success:^(NSArray *results) {
+        [_weakSelf.dataSource removeAllObjects];
+        [_weakSelf.collectionView reloadData];
+        [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
+    } failure:^(NSArray *results) {
+       
+    }];
     
     [self.collectionView.mj_header endRefreshing];
 }
@@ -116,82 +158,25 @@
 {
     //封装请求参数
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"username"] = @"123";
-    params[@"pwd"] = @"123";
-    
-    [self getGoodsRequires:params dropUp:YES];
+    self.idStartNow = self.idStartNow!=0 ? self.idStartNow:1;
+    self.idEndNow = self.idEndNow!=0 ? self.idEndNow:kStepData;
+    params[kParamIdStart] = [NSString stringWithFormat:@"%ld", self.idStartNow];
+    params[kParamIdEnd] = [NSString stringWithFormat:@"%ld", self.idEndNow];
+    params[kParamSex] = self.sexNow!=nil ? self.sexNow:[NSString stringWithFormat:@"%ld", sexAll];
+    params[kParamSubClass] = self.subClassNow!=nil ? self.subClassNow:[NSString stringWithFormat:@"%ld", subClassAll];
+    FDLog(@"%@", params);
+    __weak typeof(self) _weakSelf = self;
+    [FDHomeNetworkTool getGoodsRequires:params dropUp:YES success:^(NSArray *results) {
+        //获取成功，idStartNow和idEndNow增加
+        _weakSelf.idStartNow += kStepData;
+        _weakSelf.idEndNow += kStepData;
+        [_weakSelf addMoreItemForCollectionView:results dropUp:YES];
+    } failure:^(NSArray *results) {
+        //没有获取到数据，idStartNow和idEndNow不变
+    }];
     
     [self.collectionView.mj_footer endRefreshing];
 }
-
-/**
- *  发送get请求，获取数据
- */
-- (void)getGoodsRequires:(NSDictionary *)params dropUp:(BOOL)direction
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (direction) {
-            [self.collectionView.mj_footer endRefreshing];
-        }else{
-            [self.collectionView.mj_header endRefreshing];
-        }
-    });
-    
-    //发送get请求，返回json数据
-    AFHTTPRequestOperationManager *maneger = [[AFHTTPRequestOperationManager alloc] init];
-    maneger.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    //发送请求
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [maneger GET:goodsRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            /**
-             *  返回的就是dict， 保存到array, 开始刷新collectionview
-             */
-            NSArray *array = responseObject[@"videos"];
-            NSMutableArray *arrayM = [NSMutableArray array];
-            //字典转模型
-            FDLog(@"这里插入测试数据");
-            for (NSDictionary *dict in array) {
-                FDGoodsModel *model = [FDGoodsModel goodsWithDict:dict];
-                
-                model.ID = @"2";
-                model.name = @"卫衣卫衣卫衣";
-                model.price = @"156.05";
-                model.subClass = @"T";
-                model.sex = @"male";
-                model.minImageUrl1 = @"minImageUrl2";
-                model.minImageUrl2 = @"minImageUrl2";
-                model.minImageUrl3 = @"minImageUrl2";
-                model.descImageUrl1 = @"minImageUrl2";
-                model.descImageUrl2 = @"minImageUrl2";
-                model.descImageUrl3 = @"minImageUrl2";
-                model.descImageUrl4 = @"minImageUrl2";
-                model.descImageUrl5 = @"minImageUrl2";
-                model.aboutImageUrl = @"minImageUrl2";
-                model.sizeImageUrl = @"minImageUrl2";
-                model.remarkImageUrl = @"minImageUrl2";
-                
-                if (direction) {
-                    [arrayM insertObject:model atIndex:0];
-                }else{
-                    [arrayM addObject:model];
-                }
-                
-            }
-            
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self addMoreItemForCollectionView:arrayM dropUp:direction];
-            });
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [FDMBProgressHUB showError:@"获取数据失败"];
-            });
-        }];
-    });
-
-}
-
 /**
  *  添加新的数据到collectionview显示
  *
@@ -200,25 +185,29 @@
  */
 - (void)addMoreItemForCollectionView:(NSArray *)array dropUp:(BOOL)direction
 {
-    NSMutableArray *indexPath = [[NSMutableArray alloc] init];
-
-    for (NSObject *model in array) {
-        if (direction) {  //上拉
-            [self.dataSource addObject:model];
-        } else {//下拉
-            [self.dataSource insertObject:model atIndex:0];
+    __weak typeof(self) _weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSMutableArray *indexPath = [[NSMutableArray alloc] init];
+        
+        for (NSObject *model in array) {
+            if (direction) {  //上拉
+                [_weakSelf.dataSource addObject:model];
+            } else {//下拉
+                [_weakSelf.dataSource insertObject:model atIndex:0];
+            }
+            
+            FDLog(@"可能有错%ld", [_weakSelf.dataSource indexOfObject:model]);
+            [indexPath addObject:[NSIndexPath indexPathForItem:[_weakSelf.dataSource indexOfObject:model] inSection:0]];
         }
-  
         
-        [indexPath addObject:[NSIndexPath indexPathForItem:[self.dataSource indexOfObject:model] inSection:0]];
-    }
-    
-    [self.collectionView performBatchUpdates:^{
-        //添加数据
-        [self.collectionView insertItemsAtIndexPaths:indexPath];
+        [_weakSelf.collectionView performBatchUpdates:^{
+            //添加数据
+            [_weakSelf.collectionView insertItemsAtIndexPaths:indexPath];
+            
+        } completion:nil];
         
-    } completion:nil];
-
+    });
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -258,8 +247,44 @@
 
 
 
+#pragma mark - 监听通知
+/**
+ *  监听筛选数据通知执行函数
+ */
+- (void)observerFromSelectGoods:(NSNotification *)userInfo
+{
+    NSDictionary *info = [userInfo userInfo];
+    
+    NSString *sex = info[kSexKey];
+    NSString *subClass = info[kSubClassKey];
+    
+    //封装请求参数
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[kParamIdStart] = @"1";
+    params[kParamIdEnd] = [NSString stringWithFormat:@"%d", kStepData];
+    params[kParamSex] = sex;
+    params[kParamSubClass] = subClass;
+    
+    //改变当前的sex和subclass
+    self.sexNow = sex;
+    self.subClassNow = subClass;
+    self.idEndNow = kStepData+kStepData;
+    self.idStartNow = kStepData;
+    
+    FDLog(@"%@", params);
+    __weak typeof(self) _weakSelf = self;
+    [FDHomeNetworkTool getGoodsRequires:params dropUp:NO success:^(NSArray *results) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_weakSelf.dataSource removeAllObjects];  //先清空所有数据
+            [_weakSelf.collectionView reloadData];
+        });
+        //添加新的数据
+        [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
+    } failure:^(NSArray *results) {
+        
+    }];
 
-
+}
 /**
  *  懒加载datasource
  */

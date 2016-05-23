@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B0DECED1CEDFC2E00C3F6C2 /* FDGoodsInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0DECEC1CEDFC2E00C3F6C2 /* FDGoodsInfoView.m */; };
+		1B117B9B1CF34B2500BD420C /* FDHomeNetworkTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B117B9A1CF34B2500BD420C /* FDHomeNetworkTool.m */; };
 		1B20F0981CECA07D007FEE14 /* FDGoodsInfoHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B20F0971CECA07D007FEE14 /* FDGoodsInfoHeadView.m */; };
 		1B20F0A31CECAEFC007FEE14 /* NSString+FDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B20F09C1CECAEFC007FEE14 /* NSString+FDExtension.m */; };
 		1B20F0A41CECAEFC007FEE14 /* UIImage+FDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B20F09E1CECAEFC007FEE14 /* UIImage+FDExtension.m */; };
@@ -58,6 +59,8 @@
 /* Begin PBXFileReference section */
 		1B0DECEB1CEDFC2E00C3F6C2 /* FDGoodsInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDGoodsInfoView.h; path = Home/View/GoodsInfoView/FDGoodsInfoView.h; sourceTree = "<group>"; };
 		1B0DECEC1CEDFC2E00C3F6C2 /* FDGoodsInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDGoodsInfoView.m; path = Home/View/GoodsInfoView/FDGoodsInfoView.m; sourceTree = "<group>"; };
+		1B117B991CF34B2500BD420C /* FDHomeNetworkTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDHomeNetworkTool.h; sourceTree = "<group>"; };
+		1B117B9A1CF34B2500BD420C /* FDHomeNetworkTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDHomeNetworkTool.m; sourceTree = "<group>"; };
 		1B20F0961CECA07D007FEE14 /* FDGoodsInfoHeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDGoodsInfoHeadView.h; path = Home/View/GoodsInfoView/FDGoodsInfoHeadView.h; sourceTree = "<group>"; };
 		1B20F0971CECA07D007FEE14 /* FDGoodsInfoHeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDGoodsInfoHeadView.m; path = Home/View/GoodsInfoView/FDGoodsInfoHeadView.m; sourceTree = "<group>"; };
 		1B20F09B1CECAEFC007FEE14 /* NSString+FDExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FDExtension.h"; sourceTree = "<group>"; };
@@ -150,6 +153,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B117B981CF34B2500BD420C /* Tool */ = {
+			isa = PBXGroup;
+			children = (
+				1B117B991CF34B2500BD420C /* FDHomeNetworkTool.h */,
+				1B117B9A1CF34B2500BD420C /* FDHomeNetworkTool.m */,
+			);
+			name = Tool;
+			path = Common/Tool;
+			sourceTree = "<group>";
+		};
 		1B20F0941CECA02E007FEE14 /* GoodsInfoView */ = {
 			isa = PBXGroup;
 			children = (
@@ -388,6 +401,7 @@
 		1B9AE7731CE8BA0300BF48F3 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				1B117B981CF34B2500BD420C /* Tool */,
 				1B20F09A1CECAEE8007FEE14 /* Extensions */,
 				1B9AE7741CE8BA1000BF48F3 /* Controllers */,
 			);
@@ -617,6 +631,7 @@
 				1B5307C01CEB58F9003B1B92 /* MBProgressHUD.m in Sources */,
 				1B9623321CF064BE00F5F147 /* FDAddDiscoverViewController.m in Sources */,
 				1B20F0A31CECAEFC007FEE14 /* NSString+FDExtension.m in Sources */,
+				1B117B9B1CF34B2500BD420C /* FDHomeNetworkTool.m in Sources */,
 				1B5307BE1CEB58F9003B1B92 /* MBProgressHUD+MJ.m in Sources */,
 				1B20F0A41CECAEFC007FEE14 /* UIImage+FDExtension.m in Sources */,
 				1B9AE7491CE8ACDA00BF48F3 /* main.m in Sources */,

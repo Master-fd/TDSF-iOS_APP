@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
+#define kContentKey     @"contentkey"
+#define kImageUrlKey    @"imageUrlKey"
+
+
 @interface FDDiscoverModel : NSObject
 
 /**
@@ -20,5 +25,14 @@
  *  图片在服务器的url
  */
 @property (nonatomic, copy) NSString *imageUrl;
+
+
+/**
+ *  字典转模型
+ */
+- (instancetype)initWithDict:(NSDictionary *)dict;
++ (instancetype)discoverWithDict:(NSDictionary *)dict;
+
+
 
 @end

@@ -12,7 +12,7 @@
 
 
 
-@interface FDSettingViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface FDSettingViewController ()<UIAlertViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -89,7 +89,8 @@
             
         }else if (indexPath.row == 1) {
             cell.imageView.image = [UIImage imageNamed:@"clearMem"];
-            cell.textLabel.text = @"内存清理";
+            cell.textLabel.text = @"清除缓存";
+            
         }
     }
     
@@ -112,6 +113,11 @@
             vc.hidesBottomBarWhenPushed = YES;
             
             [self.navigationController pushViewController:vc animated:YES];
+        }else if (indexPath.row == 1){
+            //清空缓存
+            UIAlertView *alerView = [[UIAlertView alloc] initWithTitle:@"清除缓存" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            
+            [alerView show];
         }
     }
 }
@@ -126,6 +132,32 @@
         return 0.01;
     }
     return 10;
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 1:
+            //清空收藏和数据库等等缓存
+            [self clearDiskAllData];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)clearDiskAllData
+{
+    //先读取文件里面的内容
+    NSArray *arrayM = [NSArray arrayWithContentsOfFile:kMyCollectPlistPath];
+    NSMutableArray *data = [NSMutableArray arrayWithArray:arrayM];
+    
+    //删除所有
+    [data removeAllObjects];
+    
+    [data writeToFile:kMyCollectPlistPath atomically:YES];
 }
 
 

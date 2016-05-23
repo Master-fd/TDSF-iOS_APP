@@ -252,7 +252,7 @@
     //先读取文件里面的内容
     NSArray *arrayM = [NSArray arrayWithContentsOfFile:kMyCollectPlistPath];
     NSMutableArray *data = [NSMutableArray arrayWithArray:arrayM];
-    //遍历查看这条信息是否已经应聘过了
+    //遍历查看这条信息是否已经收藏过了
     for (NSDictionary *dic in data) {
         if ([dic[@"name"] isEqualToString:dataDic[@"name"]]
             && [dic[@"subClass"] isEqualToString:dataDic[@"subClass"]]

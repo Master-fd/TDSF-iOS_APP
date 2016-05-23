@@ -10,6 +10,14 @@
 #import "FDDiscoverViewCell.h"
 #import "FDDiscoverModel.h"
 #import "FDAddDiscoverViewController.h"
+#import "FDHomeNetworkTool.h"
+
+
+
+
+#define kParamIdStart   @"idstart"
+#define kParamIdEnd     @"idend"
+#define kStepData       30
 
 @interface FDDiscoverViewController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -18,7 +26,17 @@
 /**
  *  数据源，每个都是FDDiscoverModel
  */
-@property (nonatomic, strong) NSArray *dataSource;
+@property (nonatomic, strong) NSMutableArray *dataSource;
+
+/**
+ *  当前的IDstart
+ */
+@property (nonatomic, assign) NSInteger idStartNow;
+
+/**
+ *  当前的IDend
+ */
+@property (nonatomic, assign) NSInteger idEndNow;
 
 @end
 
@@ -30,6 +48,8 @@
     [self setupNav];
     
     [self setupViews];
+    
+    [self dropDownLoadMoreDiscovers];
 }
 
 - (void)setupNav
@@ -65,8 +85,114 @@
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.insets(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
+    
+    //添加下拉刷新控件
+    __weak typeof(self) _weakSelf = self;
+    _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        [_weakSelf dropDownLoadMoreDiscovers];
+    }];
+    
+    /**
+     *  添加上拉刷新
+     */
+    _tableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingBlock:^{
+        [_weakSelf dropUpLoadMoreDiscovers];
+    }];
+
 }
 
+
+/**
+ *  下拉刷新最新数据
+ */
+- (void)dropDownLoadMoreDiscovers
+{
+    //封装请求参数
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[kParamIdStart] = @1;
+    params[kParamIdEnd] = [NSString stringWithFormat:@"%d", kStepData];
+
+    //复位idstart和idend,
+    self.idStartNow = kStepData;
+    self.idEndNow = kStepData+kStepData;
+    FDLog(@"%@", params);
+    
+    __weak typeof(self) _weakSelf = self;
+    [FDHomeNetworkTool getDiscoversRequires:params dropUp:NO success:^(NSArray *results) {
+        [_weakSelf.dataSource removeAllObjects];
+        [_weakSelf.tableView reloadData];
+        [_weakSelf addMoreRowForTableView:results dropUp:NO];
+    } failure:^(NSArray *results) {
+        
+    }];
+    
+    [self.tableView.mj_header endRefreshing];
+}
+
+/**
+ *  上拉加载更多旧数据
+ */
+- (void)dropUpLoadMoreDiscovers
+{
+    //封装请求参数
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    self.idStartNow = self.idStartNow!=0 ? self.idStartNow:1;
+    self.idEndNow = self.idEndNow!=0 ? self.idEndNow:kStepData;
+    params[kParamIdStart] = [NSString stringWithFormat:@"%ld", self.idStartNow];
+    params[kParamIdEnd] = [NSString stringWithFormat:@"%ld", self.idEndNow];
+    
+    FDLog(@"%@", params);
+    __weak typeof(self) _weakSelf = self;
+    [FDHomeNetworkTool getDiscoversRequires:params dropUp:YES success:^(NSArray *results) {
+        //获取成功，idStartNow和idEndNow增加
+        _weakSelf.idStartNow += kStepData;
+        _weakSelf.idEndNow += kStepData;
+        [_weakSelf addMoreRowForTableView:results dropUp:YES];
+    } failure:^(NSArray *results) {
+        //没有获取到数据，idStartNow和idEndNow不变
+    }];
+    
+    [self.tableView.mj_footer endRefreshing];
+}
+
+/**
+ *  添加新的数据到tableview显示
+ *
+ *  @param array     数据
+ *  @param direction YES 上拉，NO，下拉
+ */
+- (void)addMoreRowForTableView:(NSArray *)array dropUp:(BOOL)direction
+{
+    __weak typeof(self) _weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSMutableArray *indexRows = [[NSMutableArray alloc] init];
+        
+//            [insertRows addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+//        for (NSObject *model in array) {
+        for (int i=0; i<array.count; i++) {
+            
+            NSObject *model = array[i];
+            if (direction) {  //上拉
+                [_weakSelf.dataSource addObject:model];
+            } else {//下拉
+                [_weakSelf.dataSource insertObject:model atIndex:0];
+            }
+            
+            FDLog(@"下面的i可能有错%ld", [_weakSelf.dataSource indexOfObject:model]);
+            [indexRows addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+        
+        [_weakSelf.tableView beginUpdates];
+            //添加数据
+        [_weakSelf.tableView insertRowsAtIndexPaths:indexRows withRowAnimation:UITableViewRowAnimationFade];
+        
+        [_weakSelf.tableView endUpdates];
+    });
+}
+
+
+#pragma mark - uitableviewdelegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -96,18 +222,11 @@
  *
  *  @return datasource
  */
-- (NSArray *)dataSource
+- (NSMutableArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = [NSArray array];
+        _dataSource = [NSMutableArray array];
         
-        NSMutableArray *arrayM = [NSMutableArray array];
-        for (int i =0; i<5; i++) {
-            FDDiscoverModel *model = [[FDDiscoverModel alloc] init];
-            [arrayM addObject:model];
-        }
-        
-        _dataSource = arrayM;
     }
     return _dataSource;
 }
@@ -192,11 +311,5 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-//- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-//{
-//    Method method = class_getInstanceMethod([self class], @selector(drawRect:));
-//    UIViewController *vc = [navigationController viewControllers][0];
-//    
-//    class_replaceMethod([[[vc.view subviews][0] subviews][0] class],@selector(drawRect:),method_getImplementation(method),method_getTypeEncoding(method));
-//}
+
 @end
