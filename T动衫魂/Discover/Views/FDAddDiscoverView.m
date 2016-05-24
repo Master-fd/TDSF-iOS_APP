@@ -19,8 +19,7 @@
     UILabel *_tagLab;
     UIView *_lineDownView;
     
-    //图片和文字内容
-    UITextView *_contentTextView;
+    //图片和文字内容背景
     UIView *_bgContentView;
     UIImageView *_contentImageView;
     

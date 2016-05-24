@@ -179,7 +179,7 @@
                 [_weakSelf.dataSource insertObject:model atIndex:0];
             }
             
-            FDLog(@"下面的i可能有错%ld", [_weakSelf.dataSource indexOfObject:model]);
+            FDLog(@"下面的i储存方式可能有错%ld", [_weakSelf.dataSource indexOfObject:model]);
             [indexRows addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
         
@@ -239,7 +239,7 @@
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"发布自己的买家秀" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"拍照" otherButtonTitles:@"从手机相册选择", nil];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [sheet showInView:self.view];
+        [sheet showInView:self.view];  //获取相片
     });
     
    

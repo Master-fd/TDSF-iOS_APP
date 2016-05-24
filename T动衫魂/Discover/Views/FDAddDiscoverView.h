@@ -10,7 +10,13 @@
 
 @interface FDAddDiscoverView : UIView
 
-
+/**
+ *  图片
+ */
 @property (nonatomic, strong) UIImage *image;
+
+//文字内容
+@property (nonatomic, strong) UITextView *contentTextView;
+
 
 @end

@@ -1,14 +1,14 @@
 //
 //  FDAddDiscoverViewController.m
 //  T动衫魂
-//
+//  编辑自己将要发布的秀
 //  Created by asus on 16/5/21.
 //  Copyright (c) 2016年 asus. All rights reserved.
 //
 
 #import "FDAddDiscoverViewController.h"
 #import "FDAddDiscoverView.h"
-
+#import "FDHomeNetworkTool.h"
 
 @interface FDAddDiscoverViewController()
 
@@ -47,12 +47,29 @@
 
 
 /**
- *  发布买家秀
+ *  联网发布买家秀,post方式上传图片
  */
 - (void)sendDiscoverBtnDidClick
 {
-    FDLog(@"联网发布");
+    if (!self.image) {
+        [FDMBProgressHUB showError:@"请添加图片"];
+        return;
+    }
+    if (!_addDiscoverView.contentTextView.text.length) {
+        [FDMBProgressHUB showError:@"请编辑文字"];
+        return;
+    }
+
+    [FDHomeNetworkTool addDiscoverWithImage:self.image content:_addDiscoverView.contentTextView.text success:^{
+        FDLog(@"发布成功");
+        
+    } failure:^{
+        //发布失败，提示
+        [FDMBProgressHUB showError:@"发布失败,请稍后重发"];
+    }];
     
+    //返回
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)setImage:(UIImage *)image

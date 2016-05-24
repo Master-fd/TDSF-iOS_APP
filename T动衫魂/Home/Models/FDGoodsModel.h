@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+//服务器返回的json是array，每个goods是dict。下面为对应的key
 #define kGoodsidKey      @"id"
 #define kGoodsnameKey        @"name"
 #define kGoodspriceKey        @"price"

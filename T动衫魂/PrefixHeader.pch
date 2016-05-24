@@ -36,9 +36,10 @@
 
 //获取商品地址
 #define kGoodsRequireAddr          @"http://192.168.31.216:8080/MJServer/video"
-//获取discover
+//获取discover地址
 #define kDiscoversRequireAddr      @"http://192.168.31.216:8080/MJServer/video"
-
+//发布朋友圈地址
+#define kAddDiscoverAddr           @"http://192.168.31.216:8080/MJServer/upload"
 
 #define kMyCollectPlistPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] \
                               stringByAppendingPathComponent:@"myCollectGoods.plist"]
