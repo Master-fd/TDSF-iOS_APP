@@ -68,7 +68,7 @@
 {
     
     FDGoodsModel *model = self.dataSource[indexPath.row];
-   
+    
     FDMyCollectCell *cell = [tableView dequeueReusableCellWithIdentifier:kcellID forIndexPath:indexPath];
     
     cell.model = model;
@@ -136,11 +136,4 @@
     return _dataSource;
 }
 
-/**
- *  收藏
- */
-- (void)collectBtnDidClick
-{
-    
-}
 @end

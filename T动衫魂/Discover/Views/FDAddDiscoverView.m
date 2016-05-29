@@ -101,6 +101,7 @@
     _contentTextView.layer.borderWidth = 1;
     _contentTextView.layer.cornerRadius = 4;
     _contentTextView.delegate = self;
+    _contentTextView.keyboardType = UIKeyboardTypeDefault;
     
     _bgContentView = [[UIView alloc] init];
     [self addSubview:_bgContentView];
@@ -177,7 +178,7 @@
         make.top.equalTo(_contentTextView.mas_bottom).with.offset(10);
         make.left.equalTo(_nameLab.mas_left);
         make.right.equalTo(_weakSelf.mas_right).with.offset(-8);
-        make.bottom.equalTo(_lineGap.mas_top).with.offset(-10);
+        make.bottom.equalTo(_lineGap.mas_top).with.offset(-20);
     }];
     
     [_contentImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -189,7 +190,7 @@
         make.height.equalTo(@1);
         make.left.equalTo(_bgContentView);
         make.right.equalTo(_weakSelf.mas_right);
-        make.bottom.equalTo(_weakSelf.mas_bottom).with.offset(-5);
+        make.bottom.equalTo(_weakSelf.mas_bottom).with.offset(-50);
     }];
     
 }
@@ -209,7 +210,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    NSUInteger length = 60;
+    NSUInteger length = 200;
     
     if (textView.text.length>length) {
         textView.text = [textView.text substringWithRange:NSMakeRange(0, length)];

@@ -101,12 +101,12 @@
     
     _contentImageView = [[UIImageView alloc] init];
     [_bgContentView addSubview:_contentImageView];
-    _contentImageView.backgroundColor = FDRandomColor;
+    _contentImageView.backgroundColor = [UIColor clearColor];
     
     _contentLab = [[UILabel alloc] init];
     [self.contentView addSubview:_contentLab];
-    _contentLab.numberOfLines = 4;
-    _contentLab.textColor = kDeepGreyColor;
+    _contentLab.numberOfLines = 0;
+    _contentLab.textColor = kBlackColor;
     _contentLab.backgroundColor = [UIColor clearColor];
     _contentLab.font = [UIFont systemFontOfSize:16];
     
@@ -169,25 +169,28 @@
         make.top.equalTo(_iconImageView.mas_bottom);
         make.left.equalTo(_nameLab.mas_left);
         make.right.equalTo(_weakSelf.contentView.mas_right).with.offset(-8);
-        make.bottom.equalTo(_contentLab.mas_top).with.offset(-10);
+        make.height.equalTo([NSNumber numberWithFloat:[UIScreen mainScreen].bounds.size.width]);
     }];
     
     [_contentImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.insets(UIEdgeInsetsMake(5, 5, 5, 5));
     }];
     
-    [_contentLab sizeToFit];
+    [_contentLab sizeToFit];  //
     [_contentLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_bgContentView.mas_bottom).with.offset(15);
         make.left.and.right.equalTo(_bgContentView);
-        make.bottom.equalTo(_lineGap.mas_bottom).with.offset(-10);
     }];
     
+    
+
     //分割线条
     [_lineGap mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@1);
         make.left.equalTo(_bgContentView);
         make.right.equalTo(_weakSelf.contentView.mas_right);
-        make.bottom.equalTo(_weakSelf.contentView.mas_bottom).with.offset(-5);
+        make.top.equalTo(_contentLab.mas_bottom).with.offset(15);
+        make.bottom.equalTo(_weakSelf.contentView.mas_bottom).with.offset(-5);   //一定要有这一句，相对于contentview/bottom来布局，否则无法自动计算高度
     }];
 
 }
@@ -199,7 +202,7 @@
 {
     _model = model;
     
-    [_contentImageView sd_setImageWithURL:[NSURL URLWithString:model.imageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
+    [_contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
     
     _contentLab.text = model.content;
 }

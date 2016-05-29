@@ -34,12 +34,6 @@
 
 #define FDRandomColor    [UIColor colorWithRed:(arc4random()%255)/255.0 green:(arc4random()%255)/255.0 blue:(arc4random()%255)/255.0 alpha:1]
 
-//获取商品地址
-#define kGoodsRequireAddr          @"http://192.168.31.216:8080/MJServer/video"
-//获取discover地址
-#define kDiscoversRequireAddr      @"http://192.168.31.216:8080/MJServer/video"
-//发布朋友圈地址
-#define kAddDiscoverAddr           @"http://192.168.31.216:8080/MJServer/upload"
 
 #define kMyCollectPlistPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] \
                               stringByAppendingPathComponent:@"myCollectGoods.plist"]
@@ -50,6 +44,9 @@
 #define kSelectGoodsNotification    @"SelectGoodsNotification"
 #define kSexKey                     @"SexKey"    //通知key
 #define kSubClassKey                @"SubClass"           //通知key
+
+//服务器主机地址
+#define kServerHostAddr            @"http://119.29.202.162"
 
 /**
  *  主题颜色风格

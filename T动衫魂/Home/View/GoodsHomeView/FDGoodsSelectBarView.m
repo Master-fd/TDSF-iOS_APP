@@ -139,7 +139,7 @@
     _selectSexBtn.selected = YES;
     
    
-    NSArray *titleArray = @[@"重置", @"男", @"女"];
+    NSArray *titleArray = @[@"重置", @"男", @"女", @"通用"];
     _sexSelectBarView = [[FDSelectInfoView alloc] init];
     [self addSubview:_sexSelectBarView];
     _sexSelectBarView.titleArray = titleArray;
@@ -152,7 +152,7 @@
         if (![btnTitle isEqualToString:_weakSelf.selectSexBtn.titleLabel.text]) {
            if ([btnTitle isEqualToString:@"重置"] && [_weakSelf.selectSexBtn.titleLabel.text isEqualToString:@"性别"] ) {
            }else{
-               //发送通知
+               //筛选之后发送通知
                [_weakSelf sendNotificationWithSex:btnTitle subClass:_weakSelf.selectSubClassBtn.titleLabel.text];
     
            }
@@ -217,7 +217,7 @@
     
     _selectSubClassBtn.selected = YES;
     
-    NSArray *titleArray = @[@"重置", @"衬衫", @"长袖", @"卫衣"];
+    NSArray *titleArray = @[@"重置", @"衬衫", @"情侣", @"卫衣",  @"通用"];
     
     _subClassSelectBarView = [[FDSelectInfoView alloc] init];
     [self addSubview:_subClassSelectBarView];
@@ -231,7 +231,7 @@
         if (![btnTitle isEqualToString:_weakSelf.selectSubClassBtn.titleLabel.text]) {
             if ([btnTitle isEqualToString:@"重置"] && [_weakSelf.selectSubClassBtn.titleLabel.text isEqualToString:@"分类"] ) {
             }else{
-                //发送通知
+                //筛选之后发送通知
                 [_weakSelf sendNotificationWithSex:_weakSelf.selectSexBtn.titleLabel.text subClass:btnTitle];
             }
         }
@@ -267,28 +267,41 @@
  */
 - (void)sendNotificationWithSex:(NSString *)sexBtnTitle subClass:(NSString *)subClassBtnTitle
 {
-    NSString *sex = [NSString stringWithFormat:@"%ld", sexAll];
-    NSString *subClass = [NSString stringWithFormat:@"%ld", subClassAll];
+    NSString *sex=nil;
+    NSString *subClass=nil;
     
     if ([sexBtnTitle isEqualToString:@"男"]) {
-        sex = [NSString stringWithFormat:@"%ld", sexMale];
+        sex = sexMale;
     }
     if ([sexBtnTitle isEqualToString:@"女"]) {
-        sex = [NSString stringWithFormat:@"%ld", sexFemale];
+        sex = sexFemale;
+    }
+    if ([sexBtnTitle isEqualToString:@"通用"]) {
+        sex = sexCommon;
     }
     
     if ([subClassBtnTitle isEqualToString:@"衬衫"]) {
-        subClass = [NSString stringWithFormat:@"%ld", subClassShirt];
+        subClass = subClassChenshan;
     }
-    if ([subClassBtnTitle isEqualToString:@"长袖"]) {
-        subClass = [NSString stringWithFormat:@"%ld", subClassLongSleeve];
+    if ([subClassBtnTitle isEqualToString:@"情侣"]) {
+        subClass = subClassQinglv;
     }
     if ([subClassBtnTitle isEqualToString:@"卫衣"]) {
-        subClass = [NSString stringWithFormat:@"%ld", subClassCoat];
+        subClass = subClassWeiyi;
+    }
+    if ([subClassBtnTitle isEqualToString:@"通用"]) {
+        subClass = subClassCommon;
     }
     
-    NSDictionary *info = @{kSexKey : sex,
-                           kSubClassKey : subClass};
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    if (sex) {
+        [info setObject:sex forKey:kSexKey];
+    }
+    if (subClass) {
+        [info setObject:subClass forKey:kSubClassKey];
+    }
+    
+    
     //发出通知，控制器请求新数据
     NSNotificationCenter *defaults = [NSNotificationCenter defaultCenter];
     [defaults postNotificationName:kSelectGoodsNotification object:self userInfo:info];

@@ -61,8 +61,7 @@
     }
 
     [FDHomeNetworkTool addDiscoverWithImage:self.image content:_addDiscoverView.contentTextView.text success:^{
-        FDLog(@"发布成功");
-        
+        //发布成功
     } failure:^{
         //发布失败，提示
         [FDMBProgressHUB showError:@"发布失败,请稍后重发"];

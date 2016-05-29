@@ -17,13 +17,15 @@
 
 /**
  *  每次都向服务器尝试请求多少条数据，具体返回多少条数据需要服务器自己决定
+ *  idPage=0&pageSize=10&sex=female&subClass=common
  */
-#define kStepData       60
 //请求参数
-#define kParamStepData   @"ParamStepData"
-#define kParamIdEnd     @"idend"
-#define kParamSex       @"sex"
-#define kParamSubClass  @"subclass"
+#define kParamSexKey            @"sex"
+#define kParamSubClassKey       @"subClass"
+
+#define kParamidPageKey         @"idPage"                   //第几页，页数从0开始
+#define kParamPageSizeKey       @"pageSize"                 //每次请求，页大小的key
+#define kParampageSizeValue     @"10"                       //每页数量
 
 @interface FDHomeViewController ()<UICollectionViewDelegateFlowLayout, UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -35,9 +37,9 @@
 @property (nonatomic, strong) NSMutableArray *dataSource;
 
 /**
- *  当前的IDend
+ *  当前的page
  */
-@property (nonatomic, assign) NSInteger idEndNow;
+@property (nonatomic, assign) NSInteger idPageNow;
 
 
 /**
@@ -124,34 +126,14 @@
 }
 
 /**
- *  返回最大ID值
- */
-- (NSInteger)maxIdWithGoods:(NSArray *)results
-{
-    //获取成功，results里面都是FDGoodsModel idEndNowqu 值取最新,为results返回的最大id值，下次请求数据使用这个为startid
-    NSInteger maxId = 0;
-    for (FDGoodsModel *model in results) {
-        if (maxId<[model.ID integerValue]) {
-            maxId = [model.ID integerValue];
-        } //寻找最大ID
-    }
-
-    return maxId;
-}
-
-/**
  *  下拉刷新最新数据
  */
 - (void)dropDownLoadMoreGoods
 {
     //封装请求参数
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[kParamStepData] = [NSString stringWithFormat:@"%d", kStepData];
-    params[kParamIdEnd] = @1;  //下拉，ID从头计算
-    params[kParamSex] = self.sexNow!=nil ? self.sexNow:[NSString stringWithFormat:@"%ld", sexAll];
-    params[kParamSubClass] = self.subClassNow!=nil ? self.subClassNow:[NSString stringWithFormat:@"%ld", subClassAll];
-    
-    FDLog(@"%@", params);
+    self.idPageNow = 0;  //复位一下
+    NSDictionary *params = [self packageParam];  //封装请求参数
+
     __weak typeof(self) _weakSelf = self;
     [FDHomeNetworkTool getGoodsRequires:params dropUp:NO success:^(NSArray *results) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -159,7 +141,7 @@
             [_weakSelf.collectionView reloadData];
         });
         [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
-        _weakSelf.idEndNow = [_weakSelf maxIdWithGoods:results];   //请求成功，返回最大ID，下次请求从这个ID开始
+        _weakSelf.idPageNow ++;   //请求成功，页数+1
     } failure:^(NSArray *results) {
        
     }];
@@ -173,20 +155,15 @@
 - (void)dropUpLoadMoreGoods
 {
     //封装请求参数
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    self.idEndNow = self.idEndNow!=0 ? self.idEndNow:kStepData;
+    NSDictionary *params = [self packageParam];  //封装请求参数
     
-    params[kParamStepData] = [NSString stringWithFormat:@"%d", kStepData];
-    params[kParamIdEnd] = [NSString stringWithFormat:@"%ld", self.idEndNow];
-    params[kParamSex] = self.sexNow!=nil ? self.sexNow:[NSString stringWithFormat:@"%ld", sexAll];
-    params[kParamSubClass] = self.subClassNow!=nil ? self.subClassNow:[NSString stringWithFormat:@"%ld", subClassAll];
-    FDLog(@"%@", params);
     __weak typeof(self) _weakSelf = self;
     [FDHomeNetworkTool getGoodsRequires:params dropUp:YES success:^(NSArray *results) {
         [_weakSelf addMoreItemForCollectionView:results dropUp:YES];
-        _weakSelf.idEndNow = [_weakSelf maxIdWithGoods:results];   //请求成功，返回最大ID，下次请求从这个ID开始
+        _weakSelf.idPageNow ++;;   //请求成功，page++
     } failure:^(NSArray *results) {
         //没有获取到数据，idStartNow和idEndNow不变
+
     }];
     
     [self.collectionView.mj_footer endRefreshing];
@@ -199,12 +176,14 @@
  */
 - (void)addMoreItemForCollectionView:(NSArray *)array dropUp:(BOOL)direction
 {
+
     __weak typeof(self) _weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         
         NSMutableArray *indexPath = [[NSMutableArray alloc] init];
         
-        for (NSObject *model in array) {
+        for (int i=(int)array.count-1; i>=0; i--) {
+            FDGoodsModel *model = array[i];
             if (direction) {  //上拉
                 [_weakSelf.dataSource addObject:model];
             } else {//下拉
@@ -268,22 +247,13 @@
 {
     NSDictionary *info = [userInfo userInfo];
     
-    NSString *sex = info[kSexKey];
-    NSString *subClass = info[kSubClassKey];
-    
-    //封装请求参数
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[kParamIdEnd] = @"1";     //每次筛选，相当于从头再选
-    params[kParamStepData] = [NSString stringWithFormat:@"%d", kStepData];
-    params[kParamSex] = sex;
-    params[kParamSubClass] = subClass;
-    
     //改变当前的sex和subclass
-    self.sexNow = sex;
-    self.subClassNow = subClass;
+    self.sexNow = info[kSexKey];
+    self.subClassNow = info[kSubClassKey];
+    self.idPageNow = 0;  //复位一下
     
-    
-    FDLog(@"%@", params);
+    NSDictionary *params = [self packageParam];  //封装请求参数
+   
     __weak typeof(self) _weakSelf = self;
     [FDHomeNetworkTool getGoodsRequires:params dropUp:NO success:^(NSArray *results) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -292,11 +262,30 @@
         });
         //添加新的数据
         [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
-        _weakSelf.idEndNow = [_weakSelf maxIdWithGoods:results];   //请求成功，返回最大ID，下次请求从这个ID开始
+        _weakSelf.idPageNow ++;   //请求成功
     } failure:^(NSArray *results) {
-        
+
     }];
 
+}
+
+/**
+ *  封装请求参数
+ */
+- (NSDictionary *)packageParam
+{
+    //封装请求参数
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[kParamPageSizeKey] = kParampageSizeValue;
+    params[kParamidPageKey] = [NSString stringWithFormat:@"%ld", self.idPageNow];  //
+    if (self.sexNow) {
+        params[kParamSexKey] = self.sexNow;
+    }
+    if (self.subClassNow) {
+        params[kParamSubClassKey] = self.subClassNow;
+    }
+    
+    return params;
 }
 /**
  *  懒加载datasource

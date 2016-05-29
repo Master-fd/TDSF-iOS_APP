@@ -115,8 +115,9 @@
 - (void)setModel:(FDGoodsModel *)model
 {
     _model = model;
-    [_imageView sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl1] placeholderImage:[UIImage imageNamed:@"icon_AboutMeMax"]];
-    _nameLab.text = model.name ? model.name:@"衬衫";
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl1] placeholderImage:[UIImage imageNamed:@"icon_AboutMeMax"] options:SDWebImageProgressiveDownload];
+    
+    _nameLab.text = model.name;
     _priceValue.text = model.price ? model.price:@"00.00";
     
     

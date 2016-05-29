@@ -161,14 +161,14 @@
 {
     _model = model;
     
-    [_imageview1 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl1] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_imageview2 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl2] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_imageview3 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl3] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_imageview4 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl4] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_imageview5 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl5] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
+    [_imageview1 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl1] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_imageview2 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl2] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_imageview3 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl3] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_imageview4 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl4] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_imageview5 sd_setImageWithURL:[NSURL URLWithString:model.descImageUrl5] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
     
-    [_aboutImageview sd_setImageWithURL:[NSURL URLWithString:model.aboutImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_sizeImageview sd_setImageWithURL:[NSURL URLWithString:model.sizeImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
+    [_aboutImageview sd_setImageWithURL:[NSURL URLWithString:model.aboutImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_sizeImageview sd_setImageWithURL:[NSURL URLWithString:model.sizeImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
 }
 
 

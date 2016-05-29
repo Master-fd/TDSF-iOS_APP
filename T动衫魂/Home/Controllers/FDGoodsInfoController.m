@@ -224,7 +224,6 @@
                           kGoodsremarkImageUrlKey : self.model.remarkImageUrl
                           
                           };
-    
     if ([self saveGoodsWithPlist:dic]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [FDMBProgressHUB showSuccess:@"已收藏"];

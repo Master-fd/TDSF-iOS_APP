@@ -8,7 +8,7 @@
 
 #import "FDGoodsInfoHeadView.h"
 #import "FDGoodsModel.h"
-
+#import "FDSelectInfoView.h"
 
 
 @interface FDGoodsInfoHeadView()<UIScrollViewDelegate>{
@@ -26,7 +26,8 @@
     UIView *_lineGapView2;
     UILabel *_tagLab;
     UILabel *_subClassLab;
-    
+    UILabel *_sexTagLab;
+    UILabel *_sexLab;
     
 }
 
@@ -118,6 +119,17 @@
     _subClassLab.textColor = kDeepGreyColor;
     _subClassLab.font = [UIFont systemFontOfSize:17];
     
+    _sexTagLab = [[UILabel alloc] init];
+    [self addSubview:_sexTagLab];
+    _sexTagLab.text = @"性别:";
+    _sexTagLab.textColor = kDeepGreyColor;
+    _sexTagLab.font = [UIFont systemFontOfSize:17];
+    
+    _sexLab = [[UILabel alloc] init];
+    [self addSubview:_sexLab];
+    _sexLab.textColor = kDeepGreyColor;
+    _sexLab.font = [UIFont systemFontOfSize:17];
+    
     _lineGapView2 = [[UIView alloc] init];
     [self addSubview:_lineGapView2];
     _lineGapView2.backgroundColor = kFrenchGreyColor;
@@ -204,6 +216,18 @@
         make.centerY.equalTo(_tagLab);
         make.left.equalTo(_tagLab.mas_right).with.offset(10);
     }];
+    //性别
+    [_sexTagLab sizeToFit];
+    [_sexTagLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(_weakSelf.mas_centerX).with.offset(10);
+        make.top.equalTo(_lineGapView1.mas_bottom).with.offset(10);
+    }];
+    
+    [_sexLab sizeToFit];
+    [_sexLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(_sexTagLab);
+        make.left.equalTo(_sexTagLab.mas_right).with.offset(10);
+    }];
     
     //分割线
     [_lineGapView2 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -235,14 +259,41 @@
 {
     _model = model;
     
-    [_minImageView1 sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl1] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_minImageView2 sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl2] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    [_minImageView3 sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl3] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
+    [_minImageView1 sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl1] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_minImageView2 sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl2] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    [_minImageView3 sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl3] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
     
     _priceValue.text = model.price ? model.price:@"00.00";
-    _nameLab.text = model.name ? model.name:@"衬衫";
-    _subClassLab.text = model.subClass ? model.subClass:@"衬衫";
+    _nameLab.text = model.name;
+    
+    if (model.subClass) {
+        if ([model.subClass isEqualToString:subClassCommon]) {
+            _subClassLab.text = @"通用";
+        }
+        if ([model.subClass isEqualToString:subClassWeiyi]) {
+            _subClassLab.text = @"卫衣";
+        }
+        if ([model.subClass isEqualToString:subClassChenshan]) {
+            _subClassLab.text = @"衬衫";
+        }
+        if ([model.subClass isEqualToString:subClassQinglv]) {
+            _subClassLab.text = @"情侣";
+        }
+    }
+    
+    if (model.sex) {
+        if ([model.sex isEqualToString:sexCommon]) {
+            _sexLab.text = @"通用";
+        }
+        if ([model.sex isEqualToString:sexMale]) {
+            _sexLab.text = @"男";
+        }
+        if ([model.sex isEqualToString:sexFemale]) {
+            _sexLab.text = @"女";
+        }
 
+    }
+    
 }
 
 @end

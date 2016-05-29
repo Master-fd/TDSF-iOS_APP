@@ -53,7 +53,7 @@
 {
     _model = model;
     
-    [_remarkImageView sd_setImageWithURL:[NSURL URLWithString:model.remarkImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
+    [_remarkImageView sd_setImageWithURL:[NSURL URLWithString:model.remarkImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
 }
 
 @end

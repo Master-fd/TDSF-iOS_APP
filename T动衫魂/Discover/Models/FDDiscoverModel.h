@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 
-#define kContentKey     @"contentkey"
-#define kImageUrlKey    @"imageUrlKey"
+#define kContentKey     @"content"
+#define kImageUrlKey    @"contentImageUrl"
 
 
 @interface FDDiscoverModel : NSObject
@@ -24,7 +24,7 @@
 /**
  *  图片在服务器的url
  */
-@property (nonatomic, copy) NSString *imageUrl;
+@property (nonatomic, copy) NSString *contentImageUrl;
 
 
 /**

@@ -11,13 +11,13 @@
 #import "FDDiscoverModel.h"
 #import "FDAddDiscoverViewController.h"
 #import "FDHomeNetworkTool.h"
+#import "UITableView+FDTemplateLayoutCell.h"
 
 
 
-
-#define kParamIdStart   @"idstart"
-#define kParamIdEnd     @"idend"
-#define kStepData       30
+#define kParamidPageKey         @"idPage"                   //第几页，页数从0开始
+#define kParamPageSizeKey       @"pageSize"                 //每次请求，页大小的key
+#define kParampageSizeValue     @"10"                       //每页数量
 
 @interface FDDiscoverViewController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -31,12 +31,8 @@
 /**
  *  当前的IDstart
  */
-@property (nonatomic, assign) NSInteger idStartNow;
+@property (nonatomic, assign) NSInteger idPageNow;
 
-/**
- *  当前的IDend
- */
-@property (nonatomic, assign) NSInteger idEndNow;
 
 @end
 
@@ -74,7 +70,7 @@
     _tableView = [[UITableView alloc] init];
     [self.view addSubview:_tableView];
     
-    _tableView.rowHeight = [UIScreen mainScreen].bounds.size.width*4/3;
+    //_tableView.rowHeight = [UIScreen mainScreen].bounds.size.width*4/3;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     _tableView.delegate = self;
@@ -109,19 +105,16 @@
 {
     //封装请求参数
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[kParamIdStart] = @1;
-    params[kParamIdEnd] = [NSString stringWithFormat:@"%d", kStepData];
+    params[kParamidPageKey] = @0;
+    params[kParamPageSizeKey] = kParampageSizeValue;
 
-    //复位idstart和idend,
-    self.idStartNow = kStepData;
-    self.idEndNow = kStepData+kStepData;
-    FDLog(@"%@", params);
-    
+    self.idPageNow = 0;
     __weak typeof(self) _weakSelf = self;
     [FDHomeNetworkTool getDiscoversRequires:params dropUp:NO success:^(NSArray *results) {
         [_weakSelf.dataSource removeAllObjects];
         [_weakSelf.tableView reloadData];
         [_weakSelf addMoreRowForTableView:results dropUp:NO];
+        _weakSelf.idPageNow ++;   //页数增加
     } failure:^(NSArray *results) {
         
     }];
@@ -136,18 +129,15 @@
 {
     //封装请求参数
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    self.idStartNow = self.idStartNow!=0 ? self.idStartNow:1;
-    self.idEndNow = self.idEndNow!=0 ? self.idEndNow:kStepData;
-    params[kParamIdStart] = [NSString stringWithFormat:@"%ld", self.idStartNow];
-    params[kParamIdEnd] = [NSString stringWithFormat:@"%ld", self.idEndNow];
-    
-    FDLog(@"%@", params);
+
+    params[kParamidPageKey] = [NSString stringWithFormat:@"%ld", self.idPageNow];
+    params[kParamPageSizeKey] = kParampageSizeValue;
+
     __weak typeof(self) _weakSelf = self;
     [FDHomeNetworkTool getDiscoversRequires:params dropUp:YES success:^(NSArray *results) {
-        //获取成功，idStartNow和idEndNow增加
-        _weakSelf.idStartNow += kStepData;
-        _weakSelf.idEndNow += kStepData;
+        //获取成功
         [_weakSelf addMoreRowForTableView:results dropUp:YES];
+        _weakSelf.idPageNow ++;   //页数增加
     } failure:^(NSArray *results) {
         //没有获取到数据，idStartNow和idEndNow不变
     }];
@@ -168,19 +158,16 @@
         
         NSMutableArray *indexRows = [[NSMutableArray alloc] init];
         
-//            [insertRows addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-//        for (NSObject *model in array) {
-        for (int i=0; i<array.count; i++) {
+        for (int i=(int)array.count-1; i>=0; i--) {
             
-            NSObject *model = array[i];
+            FDDiscoverModel *model = array[i];
             if (direction) {  //上拉
                 [_weakSelf.dataSource addObject:model];
             } else {//下拉
                 [_weakSelf.dataSource insertObject:model atIndex:0];
             }
-            
-            FDLog(@"下面的i储存方式可能有错%ld", [_weakSelf.dataSource indexOfObject:model]);
             [indexRows addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+       
         }
         
         [_weakSelf.tableView beginUpdates];
@@ -206,16 +193,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FDDiscoverModel *model = self.dataSource[indexPath.row];
-    
+
     FDDiscoverViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kcellID forIndexPath:indexPath];
-        
-    cell.model = model;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
+    [self configDataForCell:cell atIndexPath:indexPath];
     return cell;
 }
+/**
+ *  自适应高度
+ */
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    __weak typeof(self) _weakSelf = self;
+    return [tableView fd_heightForCellWithIdentifier:kcellID configuration:^(id cell) {
+        [_weakSelf configDataForCell:cell atIndexPath:indexPath];
+    }];
 
+}
+
+- (void)configDataForCell:(FDDiscoverViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    FDDiscoverModel *model = self.dataSource[indexPath.row];
+    cell.model = model;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+}
 
 /**
  *  懒加载
@@ -298,12 +299,11 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     UIImage *image = info[UIImagePickerControllerEditedImage];
-    image = [image imageWithSize:CGSizeMake(320, 480) equal:NO];
-    
+
     FDAddDiscoverViewController *vc = [[FDAddDiscoverViewController alloc] init];
  
     vc.hidesBottomBarWhenPushed = YES;
-    vc.image = [image imageWithSize:CGSizeMake(960, 1280) equal:YES];
+    vc.image = [image imageWithSize:CGSizeMake(480, 600) equal:YES];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

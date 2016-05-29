@@ -103,8 +103,8 @@
 {
     _model = model;
     
-    [_imageView sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl1] placeholderImage:[UIImage imageNamed:@"defult_placeholder"]];
-    _nameLab.text = model.name ? model.name:@"衬衫";
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:model.minImageUrl1] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
+    _nameLab.text = model.name;
     _priceValue.text = model.price ? model.price:@"00.00";
 }
 

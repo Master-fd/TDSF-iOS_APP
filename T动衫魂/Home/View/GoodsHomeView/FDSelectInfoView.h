@@ -10,18 +10,16 @@
 
 
 
-typedef NS_ENUM(NSInteger, sex){
-    sexAll   = 0,   //不分
-    sexMale  = 1,   //男
-    sexFemale= 2     //女
-};
+#define sexCommon   @"common"   //不分
+#define sexMale     @"male"   //男
+#define sexFemale   @"female"     //女
 
-typedef NS_ENUM(NSInteger, subClass){
-    subClassAll           = 0,   //不分
-    subClassShirt     = 1,   //衬衫
-    subClassLongSleeve    = 2,   //长袖
-    subClassCoat          = 3,   //卫衣
-};
+
+#define subClassCommon          @"common"   //不分
+#define subClassChenshan        @"chenshan"   //衬衫
+#define subClassQinglv          @"qinglv"   //情侣
+#define subClassWeiyi           @"weiyi"   //卫衣
+
 
 
 typedef void(^btnClickBlock)(NSString *btnTitle);
