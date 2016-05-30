@@ -25,7 +25,7 @@
 
 #define kParamidPageKey         @"idPage"                   //第几页，页数从0开始
 #define kParamPageSizeKey       @"pageSize"                 //每次请求，页大小的key
-#define kParampageSizeValue     @"10"                       //每页数量
+#define kParampageSizeValue     @"20"                       //每页数量
 
 @interface FDHomeViewController ()<UICollectionViewDelegateFlowLayout, UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -131,7 +131,7 @@
 - (void)dropDownLoadMoreGoods
 {
     //封装请求参数
-    self.idPageNow = 0;  //复位一下
+    self.idPageNow = 0;  //复位一下,从最新的开始查找
     NSDictionary *params = [self packageParam];  //封装请求参数
 
     __weak typeof(self) _weakSelf = self;
@@ -141,9 +141,9 @@
             [_weakSelf.collectionView reloadData];
         });
         [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
-        _weakSelf.idPageNow ++;   //请求成功，页数+1
+        _weakSelf.idPageNow++;
     } failure:^(NSArray *results) {
-       
+        
     }];
     
     [self.collectionView.mj_header endRefreshing];
@@ -181,7 +181,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         NSMutableArray *indexPath = [[NSMutableArray alloc] init];
-        
+
         for (int i=(int)array.count-1; i>=0; i--) {
             FDGoodsModel *model = array[i];
             if (direction) {  //上拉
@@ -189,10 +189,12 @@
             } else {//下拉
                 [_weakSelf.dataSource insertObject:model atIndex:0];
             }
-
-            [indexPath addObject:[NSIndexPath indexPathForItem:[_weakSelf.dataSource indexOfObject:model] inSection:0]];
         }
         
+        for (int i=0; i<array.count; i++) {   //查询每个model在datasource的位置
+            FDGoodsModel *model = array[i];
+            [indexPath addObject:[NSIndexPath indexPathForItem:[_weakSelf.dataSource indexOfObject:model] inSection:0]];
+        }
         [_weakSelf.collectionView performBatchUpdates:^{
             //添加数据
             [_weakSelf.collectionView insertItemsAtIndexPaths:indexPath];

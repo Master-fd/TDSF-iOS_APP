@@ -83,6 +83,7 @@
     [_nameLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_weakSelf.contentView).with.offset(marginMin);
         make.right.equalTo(_weakSelf.contentView).with.offset(-marginMin);
+        make.height.equalTo([NSNumber numberWithFloat:_nameLab.font.lineHeight]);
         make.bottom.equalTo(_priceValue.mas_top).with.offset(-marginMin);
     }];
     
@@ -95,6 +96,7 @@
     [_priceValue sizeToFit];
     [_priceValue mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_priceLab.mas_right).with.offset(marginMin);
+        make.height.equalTo([NSNumber numberWithFloat:_priceLab.font.lineHeight]);
         make.bottom.equalTo(_weakSelf.contentView).with.offset(-marginMin);
     }];
 }

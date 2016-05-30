@@ -17,7 +17,7 @@
 
 #define kParamidPageKey         @"idPage"                   //第几页，页数从0开始
 #define kParamPageSizeKey       @"pageSize"                 //每次请求，页大小的key
-#define kParampageSizeValue     @"10"                       //每页数量
+#define kParampageSizeValue     @"15"                       //每页数量
 
 @interface FDDiscoverViewController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -70,7 +70,6 @@
     _tableView = [[UITableView alloc] init];
     [self.view addSubview:_tableView];
     
-    //_tableView.rowHeight = [UIScreen mainScreen].bounds.size.width*4/3;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     _tableView.delegate = self;
@@ -166,10 +165,12 @@
             } else {//下拉
                 [_weakSelf.dataSource insertObject:model atIndex:0];
             }
-            [indexRows addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-       
+
         }
-        
+        for (int i=0; i<array.count; i++) {
+            FDDiscoverModel *model = array[i];
+            [indexRows addObject:[NSIndexPath indexPathForRow:[_weakSelf.dataSource indexOfObject:model] inSection:0]];
+        }
         [_weakSelf.tableView beginUpdates];
             //添加数据
         [_weakSelf.tableView insertRowsAtIndexPaths:indexRows withRowAnimation:UITableViewRowAnimationFade];
@@ -205,10 +206,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     __weak typeof(self) _weakSelf = self;
-    return [tableView fd_heightForCellWithIdentifier:kcellID configuration:^(id cell) {
+    return [tableView fd_heightForCellWithIdentifier:kcellID cacheByIndexPath:indexPath configuration:^(id cell) {
         [_weakSelf configDataForCell:cell atIndexPath:indexPath];
     }];
-
 }
 
 - (void)configDataForCell:(FDDiscoverViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
