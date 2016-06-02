@@ -62,7 +62,7 @@
     
     _nameLab = [[UILabel alloc] init];
     [self.contentView addSubview:_nameLab];
-    _nameLab.text = @"T动班服";
+    _nameLab.text = @"T动衫服";
     _nameLab.font = [UIFont systemFontOfSize:15];
     _nameLab.textColor = kRoseColor;
     _nameLab.backgroundColor = [UIColor clearColor];
@@ -87,7 +87,7 @@
     _tagLab.font = [UIFont systemFontOfSize:15];
     _tagLab.numberOfLines = 0;
     _tagLab.textAlignment = NSTextAlignmentCenter;
-    _tagLab.text = @"T动班魂，活力四射";
+    _tagLab.text = @"T动衫魂，活力四射";
     _lineDownView = [[UIView alloc] init];
     [self.contentView addSubview:_lineDownView];
     _lineDownView.backgroundColor = kDeepGreyColor;

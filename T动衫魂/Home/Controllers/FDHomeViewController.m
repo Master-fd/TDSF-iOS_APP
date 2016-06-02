@@ -75,7 +75,7 @@
 
 - (void)setupNav
 {
-    self.navigationItem.title = @"T动班魂";
+    self.navigationItem.title = @"T动衫魂";
     
     //监听通知
     NSNotificationCenter *defaults = [NSNotificationCenter defaultCenter];

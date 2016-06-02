@@ -85,7 +85,7 @@
     _tagLab.font = [UIFont systemFontOfSize:15];
     _tagLab.numberOfLines = 0;
     _tagLab.textAlignment = NSTextAlignmentCenter;
-    _tagLab.text = @"T动班魂，活力四射";
+    _tagLab.text = @"T动衫魂，活力四射";
     _lineDownView = [[UIView alloc] init];
     [self addSubview:_lineDownView];
     _lineDownView.backgroundColor = kDeepGreyColor;

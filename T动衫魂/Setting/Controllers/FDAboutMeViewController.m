@@ -61,7 +61,7 @@
     //关于我们
     UILabel *contentLab = [[UILabel alloc] init];
     [self.view addSubview:contentLab];
-    contentLab.text = @"T动班魂成立于2012年惠州市惠城区马庄，是一家集设计生产于一体的正规商家，主要以个性定制班服、情侣服、卫衣等服装";
+    contentLab.text = @"T动衫魂成立于2012年惠州市惠城区马庄，是一家集设计生产于一体的正规商家，主要以个性定制班服、情侣服、卫衣等服装";
     contentLab.textColor = kDeepGreyColor;
     contentLab.font = [UIFont systemFontOfSize:14];
     contentLab.backgroundColor = [UIColor clearColor];
