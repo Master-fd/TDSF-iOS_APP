@@ -12,8 +12,8 @@
 #import "FDAddDiscoverViewController.h"
 #import "FDHomeNetworkTool.h"
 #import "UITableView+FDTemplateLayoutCell.h"
-
-
+#import "FDAblumViewController.h"
+#import "FDAssetsModel.h"
 
 #define kParamidPageKey         @"idPage"                   //第几页，页数从0开始
 #define kParamPageSizeKey       @"pageSize"                 //每次请求，页大小的key
@@ -46,6 +46,7 @@
     [self setupViews];
     
     [self dropDownLoadMoreDiscovers];
+    
 }
 
 - (void)setupNav
@@ -55,10 +56,13 @@
     
     //添加买家秀按钮
     UIButton *rightBarBtn = [[UIButton alloc] init];
-    rightBarBtn.frame = CGRectMake(0, 0, 23, 23);
-    
-    [rightBarBtn setBackgroundImage:[UIImage imageNamed:@"Fav_Note_ToolBar_Camera_HL"] forState:UIControlStateNormal];
+    rightBarBtn.frame = CGRectMake(0, 0, 25, 25);
+    rightBarBtn.imageView.tintColor = [UIColor whiteColor];
+    [rightBarBtn setImage:[[UIImage imageNamed:@"Fav_Note_ToolBar_Camera_HL"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [rightBarBtn setImage:[[UIImage imageNamed:@"Fav_Note_ToolBar_Camera"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateHighlighted];
     [rightBarBtn addTarget:self action:@selector(addDiscoverClick) forControlEvents:UIControlEventTouchUpInside];
+
+    
     UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBarBtn];
     
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
@@ -109,12 +113,12 @@
 
     self.idPageNow = 0;
     __weak typeof(self) _weakSelf = self;
-    [FDHomeNetworkTool getDiscoversRequires:params dropUp:NO success:^(NSArray *results) {
+    [FDHomeNetworkTool getDiscoversWithParams:params dropUp:NO success:^(NSArray *results) {
         [_weakSelf.dataSource removeAllObjects];
         [_weakSelf.tableView reloadData];
         [_weakSelf addMoreRowForTableView:results dropUp:NO];
         _weakSelf.idPageNow ++;   //页数增加
-    } failure:^(NSArray *results) {
+    } failure:^(NSInteger statusCode, NSString *message) {
         
     }];
     
@@ -129,16 +133,16 @@
     //封装请求参数
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
-    params[kParamidPageKey] = [NSString stringWithFormat:@"%ld", self.idPageNow];
+    params[kParamidPageKey] = [NSString stringWithFormat:@"%d", self.idPageNow];
     params[kParamPageSizeKey] = kParampageSizeValue;
 
     __weak typeof(self) _weakSelf = self;
-    [FDHomeNetworkTool getDiscoversRequires:params dropUp:YES success:^(NSArray *results) {
+    [FDHomeNetworkTool getDiscoversWithParams:params dropUp:YES success:^(NSArray *results) {
         //获取成功
         [_weakSelf addMoreRowForTableView:results dropUp:YES];
         _weakSelf.idPageNow ++;   //页数增加
-    } failure:^(NSArray *results) {
-        //没有获取到数据，idStartNow和idEndNow不变
+    } failure:^(NSInteger statusCode, NSString *message) {
+        
     }];
     
     [self.tableView.mj_footer endRefreshing];
@@ -237,36 +241,53 @@
  */
 - (void)addDiscoverClick
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"发布自己的买家秀" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"拍照" otherButtonTitles:@"从手机相册选择", nil];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [sheet showInView:self.view];  //获取相片
-    });
+    //检测是否登录了
+    if ([FDUserInfo shareFDUserInfo].isLogin) {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"发布自己的买家秀" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"拍照" otherButtonTitles:@"从手机相册选择", nil];
+        
+        __weak typeof(self) _weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [sheet showInView:_weakSelf.tableView];  //获取相片
+        });
+    }else{
+        //提示登录
+        FDLoginController *vc = [[FDLoginController alloc] init];
+        [self presentViewController:vc animated:YES completion:nil];
+    }
     
    
 }
 
+/**
+ *  打开相机
+ */
+- (void)openCamera
+{
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    
+    imagePickerController.delegate = self;
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+    imagePickerController.allowsEditing = NO;
+    
+    [self presentViewController:imagePickerController animated:YES completion:nil];
+}
 
 /**
- *  打开相册,或则相机
- *  yes  打开相册，  no 打开相机
+ *  打开相册
  */
-- (void)openAlbum:(BOOL)Album
+- (void)openAlbum
 {
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    __weak typeof(self) _weakSelf = self;
+    FDAblumViewController *picker = [[FDAblumViewController alloc] init];
+    picker.didSelectImageBlock = ^(FDAssetsModel *asset){
+        
+        __strong typeof(_weakSelf) _strongSelf = _weakSelf;
+        UIImage *image = [asset fullScreenImage];//取出全屏图
+        //前往发布朋友圈
+        [_strongSelf gotoAddDiscoverWithImage:image];
+    };
     
-    imagePicker.delegate = self;
-    imagePicker.allowsEditing = YES;   //系统自带的编辑框
-
-    if (Album) {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    } else {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        imagePicker.showsCameraControls = YES;
-    }
-
-    [self.navigationController presentViewController:imagePicker animated:YES completion:nil];
-    
+    [self.navigationController pushViewController:picker animated:YES];
 }
 
 
@@ -276,12 +297,12 @@
     switch (buttonIndex) {
         case 0:
             //打开相机
-            [self openAlbum:NO];
+            [self openCamera];
             break;
             
         case 1:
             //打开相册
-            [self openAlbum:YES];
+            [self openAlbum];
             break;
             
             
@@ -290,7 +311,25 @@
     }
 }
 
-
+/**
+ *  前往发布朋友圈
+ */
+- (void)gotoAddDiscoverWithImage:(UIImage *)image
+{
+    __weak typeof(self) _weakSelf = self;
+    
+    FDAddDiscoverViewController *vc = [[FDAddDiscoverViewController alloc] init];
+    vc.didSendDiscoverBlock = ^(UIImage *image, NSString *content){
+        //发布成功
+        [_weakSelf dropDownLoadMoreDiscovers];
+    };
+    
+    vc.hidesBottomBarWhenPushed = YES;
+    //        vc.image = [image imageWithSize:CGSizeMake(480, 600) equal:YES];  //从定义一下大小
+    vc.image = image; //直接全屏图
+    //前往发布朋友圈
+    [self.navigationController pushViewController:vc animated:YES];
+}
 #pragma mark - UIImagePickerController delegate
 //选择了图片
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -298,13 +337,12 @@
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    UIImage *image = info[UIImagePickerControllerEditedImage];
-
-    FDAddDiscoverViewController *vc = [[FDAddDiscoverViewController alloc] init];
- 
-    vc.hidesBottomBarWhenPushed = YES;
-    vc.image = [image imageWithSize:CGSizeMake(480, 600) equal:YES];
-    [self.navigationController pushViewController:vc animated:YES];
+    UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
+    NSData *imageData = UIImageJPEGRepresentation(originalImage, 1);  //转换一下，图片会更加小,适合上传
+    UIImage *image = [UIImage imageWithData:imageData];
+    
+    //前往发布朋友圈
+    [self gotoAddDiscoverWithImage:image];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker

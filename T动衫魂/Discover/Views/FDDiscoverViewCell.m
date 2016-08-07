@@ -203,8 +203,8 @@
     _model = model;
     
     [_contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrl] placeholderImage:[UIImage imageNamed:@"defult_placeholder"] options:SDWebImageProgressiveDownload];
-    
     _contentLab.text = model.content;
+    _nameLab.text = model.name;
 }
 
 @end

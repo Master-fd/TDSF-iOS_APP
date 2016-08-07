@@ -142,7 +142,7 @@
         });
         [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
         _weakSelf.idPageNow++;
-    } failure:^(NSArray *results) {
+    } failure:^(NSInteger statusCode, NSString *message) {
         
     }];
     
@@ -161,9 +161,8 @@
     [FDHomeNetworkTool getGoodsRequires:params dropUp:YES success:^(NSArray *results) {
         [_weakSelf addMoreItemForCollectionView:results dropUp:YES];
         _weakSelf.idPageNow ++;;   //请求成功，page++
-    } failure:^(NSArray *results) {
-        //没有获取到数据，idStartNow和idEndNow不变
-
+    } failure:^(NSInteger statusCode, NSString *message) {
+        
     }];
     
     [self.collectionView.mj_footer endRefreshing];
@@ -265,8 +264,8 @@
         //添加新的数据
         [_weakSelf addMoreItemForCollectionView:results dropUp:NO];
         _weakSelf.idPageNow ++;   //请求成功
-    } failure:^(NSArray *results) {
-
+    } failure:^(NSInteger statusCode, NSString *message) {
+        
     }];
 
 }

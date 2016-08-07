@@ -9,6 +9,8 @@
 #import "FDAddDiscoverViewController.h"
 #import "FDAddDiscoverView.h"
 #import "FDHomeNetworkTool.h"
+#import "FDDiscoverViewController.h"
+
 
 @interface FDAddDiscoverViewController()
 
@@ -38,7 +40,7 @@
     _addDiscoverView = [[FDAddDiscoverView alloc] init];
     [self.view addSubview:_addDiscoverView];
     _addDiscoverView.image = self.image;
-    
+
     //添加约束
     [_addDiscoverView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.insets(UIEdgeInsetsMake(0, 0, 0, 0));
@@ -51,6 +53,7 @@
  */
 - (void)sendDiscoverBtnDidClick
 {
+    __weak typeof(self) _weakSelf = self;
     if (!self.image) {
         [FDMBProgressHUB showError:@"请添加图片"];
         return;
@@ -60,15 +63,24 @@
         return;
     }
 
-    [FDHomeNetworkTool addDiscoverWithImage:self.image content:_addDiscoverView.contentTextView.text success:^{
-        //发布成功
-    } failure:^{
+    [FDHomeNetworkTool addDiscoverWithName:[FDUserInfo shareFDUserInfo].name image:self.image content:_addDiscoverView.contentTextView.text success:^(NSArray *results) {
+        if (_weakSelf.didSendDiscoverBlock) {
+            _weakSelf.didSendDiscoverBlock(_weakSelf.image, _weakSelf.addDiscoverView.contentTextView.text);
+        }
+    } failure:^(NSInteger statusCode, NSString *message) {
         //发布失败，提示
         [FDMBProgressHUB showError:@"发布失败,请稍后重发"];
+
     }];
     
     //返回
-    [self.navigationController popViewControllerAnimated:YES];
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:[FDDiscoverViewController class]]) {
+            [self.navigationController popToViewController:vc animated:YES];
+            break;
+        }
+    }
+    
 }
 
 - (void)setImage:(UIImage *)image

@@ -12,7 +12,7 @@
 #import "FDGoodInfoBarView.h"
 #import "FDGoodsRemarkView.h"
 #import "FDGoodsModel.h"
-
+#import "FDCollectModel.h"
 
 @interface FDGoodsInfoController (){
     
@@ -120,6 +120,7 @@
 - (void)setupContraints
 {
     __weak typeof(self) _weakSelf = self;
+    
     [_bgScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(_weakSelf.view);
     }];
@@ -198,77 +199,64 @@
  */
 - (void)collectClick
 {
-    if (!(self.model.ID && self.model.name && self.model.price && self.model.subClass && self.model.sex
-        && self.model.minImageUrl3 && self.model.minImageUrl2 && self.model.minImageUrl1
-        && self.model.descImageUrl5 && self.model.descImageUrl4 && self.model.descImageUrl3 && self.model.descImageUrl2
-        && self.model.descImageUrl1 && self.model.aboutImageUrl && self.model.sizeImageUrl && self.model.remarkImageUrl)) {
     
-        return;
-    }
-    
-    NSDictionary *dic = @{kGoodsidKey : self.model.ID,
-                          kGoodsnameKey : self.model.name,
-                          kGoodspriceKey : self.model.price,
-                          kGoodssubClassKey : self.model.subClass,
-                          kGoodssexKey : self.model.sex,
-                          kGoodsminImageUrl1Key : self.model.minImageUrl1,
-                          kGoodsminImageUrl2Key : self.model.minImageUrl2,
-                          kGoodsminImageUrl3Key : self.model.minImageUrl3,
-                          kGoodsdescImageUrl1Key : self.model.descImageUrl1,
-                          kGoodsdescImageUrl2Key : self.model.descImageUrl2,
-                          kGoodsdescImageUrl3Key : self.model.descImageUrl3,
-                          kGoodsdescImageUrl4Key : self.model.descImageUrl4,
-                          kGoodsdescImageUrl5Key : self.model.descImageUrl5,
-                          kGoodsaboutImageUrlKey : self.model.aboutImageUrl,
-                          kGoodssizeImageUrlKey : self.model.sizeImageUrl,
-                          kGoodsremarkImageUrlKey : self.model.remarkImageUrl
-                          
-                          };
-    if ([self saveGoodsWithPlist:dic]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [FDMBProgressHUB showSuccess:@"已收藏"];
-        });
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [FDMBProgressHUB showError:@"已经收藏过了"];
-        });
-    }
-    
-    
-    
-}
-
-/**
- *  收藏一个goods
- */
-- (BOOL)saveGoodsWithPlist:(NSDictionary *)dataDic
-{
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:kMyCollectPlistPath]) {  //文件不存在，则创建
-        [fileManager createFileAtPath:kMyCollectPlistPath contents:nil attributes:nil];
-    }
-    //先读取文件里面的内容
-    NSArray *arrayM = [NSArray arrayWithContentsOfFile:kMyCollectPlistPath];
-    NSMutableArray *data = [NSMutableArray arrayWithArray:arrayM];
-    //遍历查看这条信息是否已经收藏过了
-    for (NSDictionary *dic in data) {
-        if ([dic[@"name"] isEqualToString:dataDic[@"name"]]
-            && [dic[@"subClass"] isEqualToString:dataDic[@"subClass"]]
-            && [dic[@"sex"] isEqualToString:dataDic[@"sex"]]
-            && [dic[@"minImageUrl1"] isEqualToString:dataDic[@"minImageUrl1"]]
-            && [dic[@"descImageUrl1"] isEqualToString:dataDic[@"descImageUrl1"]]) {
+    if ([FDUserInfo shareFDUserInfo].isLogin) {
+        
+        __weak typeof(self) _weakSelf = self;
+        FDCollectModel *collectModel = [[FDCollectModel alloc] init];
+        collectModel.goodsInfoModel = _weakSelf.model;
+        
+        [FDHomeNetworkTool getCollectWithName:[FDUserInfo shareFDUserInfo].name success:^(NSArray *results) {
             
+            __block BOOL isCollected = NO;
             
-            return NO;
-        }
+            [results enumerateObjectsUsingBlock:^(FDCollectModel *obj, NSUInteger idx, BOOL *stop) {
+                
+                FDGoodsModel *goodsInfoModel = obj.goodsInfoModel;
+                
+                if ([goodsInfoModel.name isEqualToString:_weakSelf.model.name]
+                    && [goodsInfoModel.subClass isEqualToString:_weakSelf.model.subClass]
+                    && [goodsInfoModel.sex isEqualToString:_weakSelf.model.sex]
+                    && [goodsInfoModel.minImageUrl1 isEqualToString:_weakSelf.model.minImageUrl1]
+                    && [goodsInfoModel.descImageUrl1 isEqualToString:_weakSelf.model.descImageUrl1])
+                {
+                    //已经收藏过了
+                    isCollected = YES;
+                    *stop = YES;
+                }
+            }];
+            
+            if (!isCollected) {
+                //同步到网络
+                [FDHomeNetworkTool postCollectWithName:[FDUserInfo shareFDUserInfo].name model:collectModel operation:kOperationAddKey success:^(NSArray *results) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [FDMBProgressHUB showSuccess:@"已收藏"];
+                    });
+                } failure:^(NSInteger statusCode, NSString *message) {
+                    FDLog(@"收藏失败");
+                }];
+            }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [FDMBProgressHUB showError:@"已经收藏过了"];
+                });
+            }
+        } failure:^(NSInteger statusCode, NSString *message) {
+            [FDHomeNetworkTool postCollectWithName:[FDUserInfo shareFDUserInfo].name model:collectModel operation:kOperationAddKey success:^(NSArray *results) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [FDMBProgressHUB showSuccess:@"已收藏"];
+                });
+            } failure:^(NSInteger statusCode, NSString *message) {
+                FDLog(@"收藏失败");
+            }];
+        }];
+        
+        
+        
+    }else{
+        FDLoginController *vc = [[FDLoginController alloc] init];
+        [self presentViewController:vc animated:YES completion:nil];
     }
-
-    [data addObject:dataDic];//添加一条数据保存
     
-    [data writeToFile:kMyCollectPlistPath atomically:YES];
-    
-    return YES;
 }
 /**
  *  懒加载设置数据

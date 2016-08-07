@@ -12,6 +12,8 @@
 
 #import "Masonry.h"
 #import "MJRefresh.h"
+#import "FDUserInfo.h"
+#import "FDHomeNetworkTool.h"
 #import "AFHTTPRequestOperation.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "UIImageView+WebCache.h"
@@ -20,7 +22,7 @@
 #import "UIImage+FDExtension.h"
 #import "NSString+FDExtension.h"
 #import "UIImageView+FDExtension.h"
-
+#import "FDLoginController.h"
 
 
 
@@ -34,7 +36,7 @@
 
 #define FDRandomColor    [UIColor colorWithRed:(arc4random()%255)/255.0 green:(arc4random()%255)/255.0 blue:(arc4random()%255)/255.0 alpha:1]
 
-
+//收藏
 #define kMyCollectPlistPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] \
                               stringByAppendingPathComponent:@"myCollectGoods.plist"]
 
@@ -46,7 +48,36 @@
 #define kSubClassKey                @"SubClass"           //通知key
 
 //服务器主机地址
-#define kServerHostAddr            @"http://119.29.202.162"
+#define kServerHostAddr            @"http://119.29.151.45"
+
+//请求参数operation
+#define kOperationAddKey       @"add"   //添加
+#define kOperationDeleteKey    @"delete"  //删除
+#define kOperationModifyKey    @"modify"  //修改
+#define kOperationSelectKey    @"select"   //查找
+
+//获取商品地址请求格式http://119.29.202.162/TDBF/uploads/getGoods.php?idPage=0&pageSize=10&sex=female&subClass=common
+#define kGoodsRequireAddr          @"http://119.29.151.45/TDBF/uploads/getGoods.php"
+//获取全部discover地址  请求格式http://119.29.202.162/TDBF/discover/getDiscover.php?idPage=0&pageSize=10
+#define kDiscoversRequireAddr      @"http://119.29.151.45/TDBF/discover/getDiscover.php"
+//获取指定名字的买家秀，get方法
+#define kDiscoversGetMyAddr        @"http://119.29.151.45/TDBF/discover/getNameDiscover.php"
+//删除指定内容和名字买家秀，post方法
+#define kDiscoversDeleteMyAddr     @"http://119.29.151.45/TDBF/discover/deleteDiscover.php"
+//发布朋友圈地址  请求格式http://119.29.202.162/TDBF/discover/addDiscover.php
+#define kAddDiscoverAddr           @"http://119.29.151.45/TDBF/discover/addDiscover.php"
+//登录url
+#define kUserLoginAddr             @"http://119.29.151.45/TDBF/user/userLoginDoAction.php"
+//注册url
+#define kUserRegisterAddr          @"http://119.29.151.45/TDBF/user/userRegisterDoAction.php"
+//获取购物车数据url，get请求http://119.29.151.45/TDBF/shoppingCart/shoppingCartDoAction.php?name=125
+#define kGetShoppingCartAddr       @"http://119.29.151.45/TDBF/shoppingCart/shoppingCartDoAction.php"
+//post购物车数据到服务器url  post请求
+#define kPostShoppingCartAddr      @"http://119.29.151.45/TDBF/shoppingCart/shoppingCartDoAction.php"
+//address url  上传post操作 获取get操作
+#define kAddressesAddr             @"http://119.29.151.45/TDBF/address/addressDoAction.php"
+//收藏 增加 删除 查找url  查找get方法，其他post方法
+#define kCollectAddr           @"http://119.29.151.45/TDBF/collect/collectDoAction.php"
 
 /**
  *  主题颜色风格

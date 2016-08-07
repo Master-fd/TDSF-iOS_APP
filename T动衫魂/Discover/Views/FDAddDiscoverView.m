@@ -60,7 +60,7 @@
     
     _nameLab = [[UILabel alloc] init];
     [self addSubview:_nameLab];
-    _nameLab.text = @"T动班服";
+    _nameLab.text = [FDUserInfo shareFDUserInfo].name;
     _nameLab.font = [UIFont systemFontOfSize:15];
     _nameLab.textColor = kRoseColor;
     _nameLab.backgroundColor = [UIColor clearColor];
@@ -123,6 +123,9 @@
 {
     CGFloat marginMin = 2;
     CGFloat marginMax = 10;
+    
+    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    
     __weak typeof(self) _weakSelf = self;
     //logo和名字
     [_iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -190,7 +193,7 @@
         make.height.equalTo(@1);
         make.left.equalTo(_bgContentView);
         make.right.equalTo(_weakSelf.mas_right);
-        make.bottom.equalTo(_weakSelf.mas_bottom).with.offset(-50);
+        make.bottom.equalTo(_weakSelf.mas_bottom).with.offset(-(screenHeight/25));
     }];
     
 }
@@ -204,7 +207,7 @@
 {
     _image = image;
     _contentImageView.image = image;
-
+    
 }
 #pragma mark - uitextviewddelgate
 
@@ -216,7 +219,7 @@
         textView.text = [textView.text substringWithRange:NSMakeRange(0, length)];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [FDMBProgressHUB showError:[NSString stringWithFormat:@"最多输入%ld文字", length]];
+            [FDMBProgressHUB showError:[NSString stringWithFormat:@"最多输入%d文字", length]];
         });
     }
 }

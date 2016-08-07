@@ -7,12 +7,11 @@
 //
 
 #import "AppDelegate.h"
-#import "FDBaseTabBarController.h"
-#import "FDBaseNavigationController.h"
 #import "FDHomeViewController.h"
 #import "FDDiscoverViewController.h"
 #import "FDSettingViewController.h"
-
+#import "FDBaseNavigationController.h"
+#import "FDBaseTabBarController.h"
 
 @interface AppDelegate ()
 
@@ -23,7 +22,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    //从sabox读取信息
+    [[FDUserInfo shareFDUserInfo] readUserInfoFromSabox];
+    //登录
+    if ([FDUserInfo shareFDUserInfo].name && [FDUserInfo shareFDUserInfo].password) {
+        [FDHomeNetworkTool userLoginWithName:[FDUserInfo shareFDUserInfo].name password:[FDUserInfo shareFDUserInfo].password success:nil failure:nil];
+    }
     
     FDHomeViewController *home = [[FDHomeViewController alloc] init];
     FDBaseNavigationController *navhome = [[FDBaseNavigationController alloc] initWithRootViewController:home];
@@ -39,18 +43,18 @@
     FDBaseNavigationController *navSetting = [[FDBaseNavigationController alloc] initWithRootViewController:setting];
     navSetting.navigationBar.translucent = NO; //不透明
     navSetting.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"设置" image:[UIImage imageNamed:@"icon_setting_nor"] selectedImage:[UIImage imageNamed:@"icon_setting_pre"]];
-
     
     FDBaseTabBarController *tabBar = [[FDBaseTabBarController alloc] init];
     tabBar.tabBar.translucent = NO;//不透明
-    
     [tabBar addChildViewController:navhome];
     [tabBar addChildViewController:navDiscover];
     [tabBar addChildViewController:navSetting];
     
+    
+    //获取主窗口
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = tabBar;
     [self.window makeKeyAndVisible];
-    
     
     return YES;
 }

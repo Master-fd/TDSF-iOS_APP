@@ -8,8 +8,10 @@
 
 #import "FDBaseViewController.h"
 
+
 @interface FDAddDiscoverViewController : FDBaseViewController
 
 @property (nonatomic, strong) UIImage *image;
 
+@property (nonatomic, copy) void(^didSendDiscoverBlock)(UIImage *image, NSString *content);
 @end

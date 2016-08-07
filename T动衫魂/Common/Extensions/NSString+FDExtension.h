@@ -12,6 +12,10 @@
 
 @interface NSString (FDExtension)
 
+/**
+ *  md5加密
+ */
+- (NSString *)md5String;
 
 /**
  *  传入一个字符串，输出一个大写字符首字母

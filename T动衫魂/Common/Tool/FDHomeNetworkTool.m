@@ -9,42 +9,403 @@
 #import "FDHomeNetworkTool.h"
 #import "FDGoodsModel.h"
 #import "FDDiscoverModel.h"
-
-
-//获取商品地址请求格式http://119.29.202.162/TDBF/uploads/getGoods.php?idPage=0&pageSize=10&sex=female&subClass=common
-#define kGoodsRequireAddr          @"http://119.29.202.162/TDBF/uploads/getGoods.php"
-//获取discover地址  请求格式http://119.29.202.162/TDBF/discover/getDiscover.php?idPage=0&pageSize=10
-#define kDiscoversRequireAddr      @"http://119.29.202.162/TDBF/discover/getDiscover.php"
-//发布朋友圈地址  请求格式http://119.29.202.162/TDBF/discover/addDiscover.php
-#define kAddDiscoverAddr           @"http://119.29.202.162/TDBF/discover/addDiscover.php"
-
-
-
-
+#import "FDShoppingCartModel.h"
+#import "FDAddressModel.h"
+#import "FDCollectModel.h"
 
 @implementation FDHomeNetworkTool
 
 
 
 
+
+/**
+ *  从服务器获取colloct信息
+ */
++ (void)getCollectWithName:(NSString *)name success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    NSDictionary *params = @{@"name" : name,
+                             @"operation" : kOperationSelectKey};
+    [manager GET:kCollectAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            NSMutableArray *arrayM = [NSMutableArray array];
+            for (NSDictionary *dict in data) {
+                
+                FDCollectModel *collect = [FDCollectModel collectWithDict:dict];
+                [arrayM addObject:collect];
+            }
+            if (requireSuccessBlock) {
+                requireSuccessBlock(arrayM);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  post collect信息到服务器
+ */
++ (void)postCollectWithName:(NSString *)name model:(FDCollectModel *)collectModel operation:(NSString *)operation success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    //封装请求参数
+    NSData *base64Data = [[NSKeyedArchiver archivedDataWithRootObject:collectModel.goodsInfoModel] base64EncodedDataWithOptions:0];
+    NSString *base64Str = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+    //封装请求参数
+    NSDictionary *params = @{@"id" : [@(collectModel.ID) stringValue],
+                             @"name" : name,
+                             @"goodsModel" : base64Str,
+                             @"operation" : operation};
+    
+    [manager POST:kCollectAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  从服务器获取address信息
+ */
++ (void)getAddressesWithName:(NSString *)name success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    NSDictionary *params = @{@"name" : name};
+    [manager GET:kAddressesAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            
+            NSMutableArray *arrayM = [NSMutableArray array];
+            for (NSDictionary *dict in data) {
+                
+                FDAddressModel *address = [FDAddressModel addressWithDict:dict];
+                [arrayM addObject:address];
+            }
+            if (requireSuccessBlock) {
+                requireSuccessBlock(arrayM);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  post修改后的address信息到服务器
+ */
++ (void)postAddressesWithName:(NSString *)name model:(FDAddressModel *)addressModel operation:(NSString *)operation success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+
+    //封装请求参数
+    NSDictionary *params = @{@"id" : [@(addressModel.ID) stringValue],
+                             @"name" : name,
+                             @"contact" : addressModel.contact,
+                             @"number" : addressModel.number,
+                             @"address" : addressModel.address,
+                             @"defaults" : [@(addressModel.defaults) stringValue],
+                             @"operation" : operation};
+    
+    [manager POST:kAddressesAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  post购物车信息到服务器
+ */
++ (void)postShoppingCartGoodsWithName:(NSString *)name model:(FDShoppingCartModel *)shoppingCartModel operation:(NSString *)operation success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    //先进行MD5加密
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    //封装请求参数
+    NSData *base64Data = [[NSKeyedArchiver archivedDataWithRootObject:shoppingCartModel.goodsInfoModel] base64EncodedDataWithOptions:0];
+    NSString *base64Str = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+    
+    NSDictionary *params = @{@"id" : [@(shoppingCartModel.ID) stringValue],
+                             @"name" : name,
+                             @"goodsName" : shoppingCartModel.goodsName,
+                             @"sumPrice" : [@(shoppingCartModel.sumPrice) stringValue],
+                             @"count" : [@(shoppingCartModel.count) stringValue],
+                             @"size" : shoppingCartModel.size,
+                             @"isSelect" : [@(shoppingCartModel.isSelect) stringValue],
+                             @"goodsModel" : base64Str,
+                             @"operation" : operation};
+    
+    [manager POST:kPostShoppingCartAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  从服务器获取购物车数据
+ */
++ (void)getShoppingCartGoodsWithName:(NSString *)name success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    NSDictionary *params = @{@"name" : name};
+    
+    [manager GET:kGetShoppingCartAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            
+            NSMutableArray *arrayM = [NSMutableArray array];
+            //字典转模型
+            for (NSDictionary *dict in data) {
+                
+                FDShoppingCartModel *model = [FDShoppingCartModel shoppingCartWithDict:dict];
+                [arrayM addObject:model];
+            }
+            if (requireSuccessBlock) {
+                requireSuccessBlock(arrayM);
+            }
+        }else {
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  发送post请求,登录,password采用MD5加密，其他的明文
+ */
++ (void)userLoginWithName:(NSString *)name password:(NSString *)password success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock
+{
+    
+    //先进行MD5加密
+    NSString *md5_password = [password md5String];
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    //封装请求参数
+    NSDictionary *params = @{@"name" : name,
+                             @"password" : md5_password};
+    
+    [manager POST:kUserLoginAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            //登录成功
+            [FDUserInfo shareFDUserInfo].name = name;
+            [FDUserInfo shareFDUserInfo].password = password;
+            [FDUserInfo shareFDUserInfo].isLogin = YES;
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else {
+            //登录失败
+            [FDUserInfo shareFDUserInfo].name = nil;
+            [FDUserInfo shareFDUserInfo].password = nil;
+            [FDUserInfo shareFDUserInfo].isLogin = NO;
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //登录失败
+        [FDUserInfo shareFDUserInfo].name = nil;
+        [FDUserInfo shareFDUserInfo].password = nil;
+        [FDUserInfo shareFDUserInfo].isLogin = NO;
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  发送post请求,注册用户,password采用MD5加密，其他的明文
+ */
++ (void)userRegisterWithName:(NSString *)name password:(NSString *)password success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock
+{
+    
+    //先进行MD5加密
+    NSString *md5_password = [password md5String];
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    //封装请求参数
+    NSDictionary *params = @{@"name" : name,
+                             @"password" : md5_password};
+    
+    [manager POST:kUserRegisterAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+      
+        if (statusCode == networdStatusSuccess) {
+            //注册成功
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else{
+            //注册失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //注册失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
 /**
  *  发送get请求，获取discover数据
  */
-+ (void)getDiscoversRequires:(NSDictionary *)params dropUp:(BOOL)direction success:(getGoodsRequiresBlock)requireSuccessBlock failure:(getGoodsRequiresBlock)requireFailureBlock
++ (void)getDiscoversWithParams:(NSDictionary *)params dropUp:(BOOL)direction success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock;
 {
-       //发送get请求，返回json数据
-    AFHTTPRequestOperationManager *maneger = [[AFHTTPRequestOperationManager alloc] init];
-    maneger.responseSerializer = [AFJSONResponseSerializer serializer];
-    maneger.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    //发送get请求，返回json数据
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    manager.requestSerializer.timeoutInterval = 20;
     //发送请求
-    [maneger GET:kDiscoversRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:kDiscoversRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
         /**
          *  返回的就是dict， 保存到array, 开始刷新tableview
+         *  格式：{code ：状态码
+                  message ：附带信息
+                  data : [数据1字典，数据2字典]
+                  }
          */
-        if (responseObject) {
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        if (statusCode == networdStatusSuccess) {
+            //请求成功，返回数据
             NSMutableArray *arrayM = [NSMutableArray array];
             //字典转模型
-            for (NSDictionary *dict in responseObject) {
+            for (NSDictionary *dict in data) {
                 
                 FDDiscoverModel *model = [FDDiscoverModel discoverWithDict:dict];
                                 
@@ -59,12 +420,17 @@
             if (requireSuccessBlock) {   //请求成功之后，执行block
                 requireSuccessBlock(arrayM);
             }
+        }else{
+            //请求失败，返回状态码信息
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
         if (requireFailureBlock) {
-            requireFailureBlock(nil);
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
         }
     }];
     
@@ -72,16 +438,166 @@
 
 
 /**
- *  发送get请求，获取goods数据
+ *  发送post请求，上传JPG格式的图片，发布朋友圈数据, 传入jpg图片和文字内容
  */
-+ (void)getGoodsRequires:(NSDictionary *)params dropUp:(BOOL)direction success:(getGoodsRequiresBlock)requireSuccessBlock failure:(getGoodsRequiresBlock)requireFailureBlock
++ (void)addDiscoverWithName:(NSString *)name image:(UIImage *)image content:(NSString *)content success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    if (!name) {
+        return;
+    }
+    if (!image) {
+        return;
+    }
+    if (!content) {
+        return;
+    }
+    //发送get请求，返回json数据
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    manager.requestSerializer.timeoutInterval = 120;
+    
+    //封装请求参数
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[kContentKey] = content;  //文字内容,需要服务器配合
+    params[kNameKey] = name;
+    [manager POST:kAddDiscoverAddr parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        
+        /*
+         此方法参数
+         1. 要上传的[二进制数据]
+         2. 对应网站上[upload.php中]处理文件的[字段"file"]
+         3. 要保存在服务器上的[文件名]
+         4. 上传文件的[mimeType]
+         */
+        NSData *data = UIImageJPEGRepresentation(image, 1.0);
+        
+        [formData appendPartWithFileData:data name:@"contentImage" fileName:@"image.jpg" mimeType:@"image/jpg"];
+        
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        } else {
+            requireFailureBlock(statusCode, message);
+        }
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+    
+}
+
+/**
+ *  发送get请求，获取指定名字的discover数据
+ */
++ (void)getDiscoversWithName:(NSString *)name success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock
 {
     //发送get请求，返回json数据
-    AFHTTPRequestOperationManager *maneger = [[AFHTTPRequestOperationManager alloc] init];
-    maneger.responseSerializer = [AFJSONResponseSerializer serializer];
-    maneger.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    NSDictionary *params = @{@"name" : [FDUserInfo shareFDUserInfo].name};
+    //发送请求
+    [manager GET:kDiscoversGetMyAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+
+        if (statusCode == networdStatusSuccess) {
+            //请求成功，返回数据
+            NSMutableArray *arrayM = [NSMutableArray array];
+            //字典转模型
+            for (NSDictionary *dict in data) {
+                
+                FDDiscoverModel *model = [FDDiscoverModel discoverWithDict:dict];
+                [arrayM insertObject:model atIndex:0];
+            }
+            
+            
+            if (requireSuccessBlock) {   //请求成功之后，执行block
+                requireSuccessBlock(arrayM);
+            }
+        }else{
+            //请求失败，返回状态码信息
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  发送post请求，删除指定买家秀
+ */
++ (void)postDeleteDiscoverWithName:(NSString *)name content:(NSString *)content success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    //封装请求参数
+    NSDictionary *params = @{@"name" : name,
+                             @"content" : content};
+    
+    [manager POST:kDiscoversDeleteMyAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            //注册成功
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else{
+            //注册失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //注册失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
+
+/**
+ *  发送get请求，获取goods数据
+ */
++ (void)getGoodsRequires:(NSDictionary *)params dropUp:(BOOL)direction success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    //发送get请求，返回json数据
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    manager.requestSerializer.timeoutInterval = 20;
+    
     //发送请求//idPage=0&pageSize=10&sex=female&subClass=common
-    [maneger GET:kGoodsRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:kGoodsRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         /**
          *  返回的就是dict， 保存到array, 开始刷新collectionview
          */
@@ -123,59 +639,12 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
         if (requireFailureBlock) {
-            requireFailureBlock(nil);
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
         }
     }];
     
 }
 
-/**
- *  发送post请求，上传JPG格式的图片，发布朋友圈数据, 传入jpg图片和文字内容
- */
-+ (void)addDiscoverWithImage:(UIImage *)image content:(NSString *)str success:(addDiscoverBlock)addDiscoverSuccessBlock failure:(addDiscoverBlock)addDiscoverFaildBlock
-{
-    if (!image) {
-        return;
-    }
-    if (!str) {
-        return;
-    }
-    //发送get请求，返回json数据
-    AFHTTPRequestOperationManager *maneger = [[AFHTTPRequestOperationManager alloc] init];
-    maneger.responseSerializer = [AFJSONResponseSerializer serializer];
-    maneger.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
-    
-    //封装请求参数
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"content"] = str;  //文字内容,需要服务器配合
-    
-    [maneger POST:kAddDiscoverAddr parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-    
-                            /*
-                              此方法参数
-                              1. 要上传的[二进制数据]
-                              2. 对应网站上[upload.php中]处理文件的[字段"file"]
-                              3. 要保存在服务器上的[文件名]
-                              4. 上传文件的[mimeType]
-                              */
-        NSData *data = UIImageJPEGRepresentation(image, 1.0);
-
-        [formData appendPartWithFileData:data name:@"contentImage" fileName:@"image.jpg" mimeType:@"image/jpg"];
-
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-    
-        if (addDiscoverSuccessBlock) {
-            addDiscoverSuccessBlock();
-        }
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
- 
-        if (addDiscoverFaildBlock) {
-            addDiscoverFaildBlock();
-        }
-    }];
-    
-}
 
 
 
