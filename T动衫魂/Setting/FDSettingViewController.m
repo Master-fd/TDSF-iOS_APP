@@ -15,6 +15,8 @@
 #import "FDLoginController.h"
 #import "FDCellItem.h"
 #import "FDLoginViewCell.h"
+#import "FDMyOrdersController.h"
+
 
 @interface FDSettingViewController ()<UIAlertViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -42,7 +44,7 @@
 
 - (void)setupViews
 {
-    self.navigationItem.title = @"设置";
+    self.navigationItem.title = @"我";
     
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStyleGrouped];
     [self.view addSubview:_tableView];
@@ -92,7 +94,7 @@
         FDCellItem *group1item3 = [FDCellItem itemWithTitle:@"我的订单" image:[UIImage imageNamed:@"LLTakeoutFlowFirstEnabled"] indicator:YES didSelectBlock:^{
             
             if ([FDUserInfo shareFDUserInfo].isLogin) {
-                FDMyCollectViewController *vc = [[FDMyCollectViewController alloc] init];
+                FDMyOrdersController *vc = [[FDMyOrdersController alloc] init];
                 vc.hidesBottomBarWhenPushed = YES;
                 [_weakSelf.navigationController pushViewController:vc animated:YES];
             }else{
@@ -267,15 +269,7 @@
 
 - (void)clearDiskAllData
 {
-    //先读取文件里面的内容
-    NSArray *arrayM = [NSArray arrayWithContentsOfFile:kMyCollectPlistPath];
-    NSMutableArray *data = [NSMutableArray arrayWithArray:arrayM];
-    
-    //删除所有
-    [data removeAllObjects];
-    
-    [data writeToFile:kMyCollectPlistPath atomically:YES];
-    
+    FDLog(@"清空缓存");
 
 }
 

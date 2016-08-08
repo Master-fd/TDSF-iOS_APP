@@ -12,9 +12,10 @@
 #import "FDShopCarViewCell.h"
 #import "FDGoodsInfoController.h"
 #import "FDCostBarView.h"
-
-
-
+#import "FDPayController.h"
+#import "FDAddressEditController.h"
+#import "FDAddressModel.h"
+#import "FDSelectAddressController.h"
 
 @interface FDShopCarViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -48,14 +49,14 @@
     [super viewWillAppear:animated];
     
     //联网获取最新的数据
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self loadShoppingCartGoodsFromServer];
     });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     //同步保存到服务器
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -100,7 +101,7 @@
     _costBarView.costSumDidClick = ^{
         //所有的商品,下单
         if (_weakSelf.allCost != 0) {
-            FDLog(@"下单");
+            [_weakSelf gotoPayOrder];
         } else {
             [FDMBProgressHUB showError:@"没有选择商品"];
         }
@@ -132,7 +133,9 @@
         [_weakSelf updateCostBarInfo];
         [_weakSelf.tableView reloadData];
     } failure:^(NSInteger statusCode, NSString *message) {
-        [FDMBProgressHUB showError:@"你还没有选购商品，赶紧挑选吧"];
+        _weakSelf.shopCarGoods = nil; //清空之前的数据
+        [_weakSelf.tableView reloadData];
+        [_weakSelf updateCostBarInfo];
     }];
 
 }
@@ -235,6 +238,69 @@
     }
 }
 
+/**
+ *  下单支付,modal的方式
+ */
+- (void)gotoPayOrder
+{
+    __weak typeof(self) _weakSelf = self;
+    //先判断是否有默认地址，没有则设置
+    [FDHomeNetworkTool getAddressesWithName:[FDUserInfo shareFDUserInfo].name success:^(NSArray *results) {
+        
+        __block FDAddressModel *defaultsAddress = nil;
+        [results enumerateObjectsUsingBlock:^(FDAddressModel *obj, NSUInteger idx, BOOL *stop) {
+            if (obj.defaults) {
+                
+                defaultsAddress = obj;
+                *stop = YES;
+            }
+        }];
+        
+        if (defaultsAddress) {
+            //有默认地址，选择默认地址传递最新的信息
+            __block NSMutableArray *arrayM = [NSMutableArray array];
+            [_weakSelf.shopCarGoods enumerateObjectsUsingBlock:^(FDShoppingCartModel *obj, NSUInteger idx, BOOL *stop) {
+                if (obj.isSelect) {//选取打钩的商品
+                    [arrayM addObject:obj];
+                }
+            }];
+            FDPayController *vc = [[FDPayController alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            vc.OrderGoodses = arrayM;
+            vc.address = defaultsAddress;
+            [_weakSelf.navigationController pushViewController:vc animated:YES];
+        } else {
+            //没有默认地址，modal出来，提示选择
+            FDSelectAddressController *vc = [[FDSelectAddressController alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            vc.addresses = results;
+            vc.didSelectAddressBlck = ^(FDAddressModel *selectAddress){
+                //继续下单流程
+                __block NSMutableArray *arrayM = [NSMutableArray array];
+                [_weakSelf.shopCarGoods enumerateObjectsUsingBlock:^(FDShoppingCartModel *obj, NSUInteger idx, BOOL *stop) {
+                    if (obj.isSelect) {//选取打钩的商品
+                        [arrayM addObject:obj];
+                    }
+                }];
+                FDPayController *vc = [[FDPayController alloc] init];
+                vc.hidesBottomBarWhenPushed = YES;
+                vc.OrderGoodses = arrayM;
+                vc.address = selectAddress;
+                [_weakSelf.navigationController pushViewController:vc animated:YES];
 
+            };
+            [_weakSelf.navigationController pushViewController:vc animated:YES];  //前往选择address
+        }
+        
+    } failure:^(NSInteger statusCode, NSString *message) {
+        //没有地址，跳转到设置新地址,然后再跳转
+        FDAddressEditController *vc = [[FDAddressEditController alloc] init];
+        vc.hidesBottomBarWhenPushed = YES;
+        vc.isAddAddress = YES;
+        [_weakSelf.navigationController pushViewController:vc animated:YES];
+
+    }];
+    
+}
 
 @end

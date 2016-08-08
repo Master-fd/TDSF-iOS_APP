@@ -14,6 +14,9 @@
 #define kAddressKey  @"address"
 #define kDefaultsKey     @"defaults"
 
+@interface FDAddressModel()<NSCoding>
+
+@end
 
 @implementation FDAddressModel
 
@@ -33,5 +36,26 @@
     return [[self alloc] initWithDict:dict];
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:[@(self.ID) stringValue] forKey:kIdKey];
+    [aCoder encodeObject:self.contact forKey:kContactKey];
+    [aCoder encodeObject:self.number forKey:kNumberKey];
+    [aCoder encodeObject:self.address forKey:kAddressKey];
+    [aCoder encodeObject:[@(self.defaults) stringValue] forKey:kDefaultsKey];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super init]) {
+        self.ID = [[aDecoder decodeObjectForKey:kIdKey] integerValue];
+        self.contact = [aDecoder decodeObjectForKey:kContactKey];
+        self.number = [aDecoder decodeObjectForKey:kNumberKey];
+        self.address = [aDecoder decodeObjectForKey:kAddressKey];
+        self.defaults = [[aDecoder decodeObjectForKey:kDefaultsKey] boolValue];
+    }
+    return self;
+
+}
 
 @end

@@ -38,7 +38,7 @@
         _nameLab.backgroundColor = [UIColor whiteColor];
         _nameLab.font = [UIFont systemFontOfSize:16];
         _nameLab.textColor = [UIColor colorWithRed:120/255.0 green:120/255.0 blue:120/255.0 alpha:1];
-        _nameLab.text = @"联系人";
+        _nameLab.text = @"联系人:";
         _nameLab.lineBreakMode = NSLineBreakByTruncatingTail;
         
         [_nameLab mas_makeConstraints:^(MASConstraintMaker *make) {

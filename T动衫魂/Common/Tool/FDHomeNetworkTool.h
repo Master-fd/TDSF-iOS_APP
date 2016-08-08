@@ -46,8 +46,19 @@ typedef void(^requiresFailureResultBlock)(NSInteger statusCode, NSString *messag
 @class FDCollectModel;
 @class FDAddressModel;
 @class FDShoppingCartModel;
+@class FDOrderModel;
 @interface FDHomeNetworkTool : NSObject
 
+
+/**
+ *  从服务器获取Order信息
+ */
++ (void)getOrderWithName:(NSString *)name success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock;
+
+/**
+ *  post Order信息到服务器
+ */
++ (void)postOrderWithName:(NSString *)name model:(FDOrderModel *)orderModel status:(NSString *)status operation:(NSString *)operation success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock;
 
 /**
  *  从服务器获取colloct信息

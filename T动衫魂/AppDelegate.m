@@ -42,7 +42,7 @@
     FDSettingViewController *setting = [[FDSettingViewController alloc] init];
     FDBaseNavigationController *navSetting = [[FDBaseNavigationController alloc] initWithRootViewController:setting];
     navSetting.navigationBar.translucent = NO; //不透明
-    navSetting.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"设置" image:[UIImage imageNamed:@"icon_setting_nor"] selectedImage:[UIImage imageNamed:@"icon_setting_pre"]];
+    navSetting.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"我" image:[UIImage imageNamed:@"icon_setting_nor"] selectedImage:[UIImage imageNamed:@"icon_setting_pre"]];
     
     FDBaseTabBarController *tabBar = [[FDBaseTabBarController alloc] init];
     tabBar.tabBar.translucent = NO;//不透明

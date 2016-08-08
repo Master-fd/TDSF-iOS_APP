@@ -12,13 +12,13 @@
 
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
-    
-    
-    self.ID = [dict[@"id"] integerValue];
-    NSString *utf8Str = dict[@"goodsModel"];
-    NSData *base64Data = [utf8Str dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *data = [[NSData alloc] initWithBase64EncodedData:base64Data options:0];
-    self.goodsInfoModel = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (self = [super init]) {
+        self.ID = [dict[@"id"] integerValue];
+        NSString *utf8Str = dict[@"goodsModel"];
+        NSData *base64Data = [utf8Str dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *data = [[NSData alloc] initWithBase64EncodedData:base64Data options:0];
+        self.goodsInfoModel = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
     
     return self;
 }

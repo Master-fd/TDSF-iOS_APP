@@ -59,7 +59,7 @@
     _confireBtn.layer.cornerRadius = 4;
     _confireBtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [_confireBtn setTitleColor:kWhiteColor forState:UIControlStateNormal];
-    [_confireBtn setTitle:@"确定下单" forState:UIControlStateNormal];
+    [_confireBtn setTitle:@"去结算" forState:UIControlStateNormal];
     [_confireBtn addTarget:self action:@selector(gotoCostBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [_confireBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(_weakSelf.mas_right).offset(-25);

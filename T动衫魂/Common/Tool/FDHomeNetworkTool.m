@@ -12,12 +12,117 @@
 #import "FDShoppingCartModel.h"
 #import "FDAddressModel.h"
 #import "FDCollectModel.h"
+#import "FDOrderModel.h"
+
 
 @implementation FDHomeNetworkTool
 
 
 
+/**
+ *  从服务器获取Order信息
+ */
++ (void)getOrderWithName:(NSString *)name success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    NSDictionary *params = @{@"name" : name,
+                             @"operation" : kOperationSelectKey};
+    [manager GET:kOrderAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            
+            NSMutableArray *arrayM = [NSMutableArray array];
+            for (NSDictionary *dict in data) {
+                
+                FDOrderModel *order = [FDOrderModel orderWithDict:dict];
+                [arrayM insertObject:order atIndex:0];
+            }
+            if (requireSuccessBlock) {
+                requireSuccessBlock(arrayM);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
 
+/**
+ *  post Order信息到服务器
+ */
++ (void)postOrderWithName:(NSString *)name model:(FDOrderModel *)orderModel status:(NSString *)status operation:(NSString *)operation success:(requiresSuccessResultBlock)requireSuccessBlock failure:(requiresFailureResultBlock)requireFailureBlock
+{
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    manager.requestSerializer.timeoutInterval = 20;
+    
+    //封装请求参数
+    //addressMode
+    NSData *addrBase64Data = [[NSKeyedArchiver archivedDataWithRootObject:orderModel.address] base64EncodedDataWithOptions:0];
+    NSString *addrBase64Str = [[NSString alloc] initWithData:addrBase64Data encoding:NSUTF8StringEncoding];
+
+    //shoppoingcartModels
+    //先将所有的shoppingcartModel 转成str，放入数组
+    __block NSMutableArray *arrayM = [NSMutableArray array];
+    [orderModel.shoppingCartModels enumerateObjectsUsingBlock:^(FDShoppingCartModel *shoppingCart, NSUInteger idx, BOOL *stop) {
+        //解码
+        NSData *shopBase64Data = [[NSKeyedArchiver archivedDataWithRootObject:shoppingCart] base64EncodedDataWithOptions:0];
+        NSString *shopBase64Str = [[NSString alloc] initWithData:shopBase64Data encoding:NSUTF8StringEncoding];
+        //保存
+        [arrayM addObject:shopBase64Str];
+    }];
+    //再将数字转成str
+    NSString *shopsBase64Str = [arrayM componentsJoinedByString:@","];
+    
+    //封装请求参数
+    NSDictionary *params = @{@"id" : [@(orderModel.ID) stringValue],
+                             @"name" : name,
+                             @"status" : status,
+                             @"addressModel" : addrBase64Str,
+                             @"shoppingCartModels" : shopsBase64Str,
+                             @"operation" : operation};
+    
+    [manager POST:kOrderAddr parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
+        
+        NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
+        NSString *message = [responseObject objectForKey:kMessageKey];
+        NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        
+        if (statusCode == networdStatusSuccess) {
+            //成功
+            if (requireSuccessBlock) {
+                requireSuccessBlock(data);
+            }
+        }else{
+            //失败
+            if (requireFailureBlock) {
+                requireFailureBlock(statusCode, message);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //失败
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+
+}
 
 /**
  *  从服务器获取colloct信息
@@ -42,7 +147,7 @@
             for (NSDictionary *dict in data) {
                 
                 FDCollectModel *collect = [FDCollectModel collectWithDict:dict];
-                [arrayM addObject:collect];
+                [arrayM insertObject:collect atIndex:0];
             }
             if (requireSuccessBlock) {
                 requireSuccessBlock(arrayM);
@@ -128,7 +233,7 @@
             for (NSDictionary *dict in data) {
                 
                 FDAddressModel *address = [FDAddressModel addressWithDict:dict];
-                [arrayM addObject:address];
+                [arrayM insertObject:address atIndex:0];
             }
             if (requireSuccessBlock) {
                 requireSuccessBlock(arrayM);
@@ -258,15 +363,15 @@
         NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
         NSString *message = [responseObject objectForKey:kMessageKey];
         NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+        //成功
         if (statusCode == networdStatusSuccess) {
             //成功
-            
             NSMutableArray *arrayM = [NSMutableArray array];
             //字典转模型
             for (NSDictionary *dict in data) {
                 
                 FDShoppingCartModel *model = [FDShoppingCartModel shoppingCartWithDict:dict];
-                [arrayM addObject:model];
+                [arrayM insertObject:model atIndex:0];
             }
             if (requireSuccessBlock) {
                 requireSuccessBlock(arrayM);

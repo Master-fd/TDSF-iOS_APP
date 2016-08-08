@@ -36,8 +36,6 @@
 		1B8F5EF41D507CF300071F41 /* FDAddrEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F5EF31D507CF300071F41 /* FDAddrEditView.m */; };
 		1B90B7EF1D563A2700B8EF28 /* FDShopCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B90B7E11D563A2700B8EF28 /* FDShopCarViewController.m */; };
 		1B90B7F01D563A2700B8EF28 /* FDShoppingCartModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B90B7E41D563A2700B8EF28 /* FDShoppingCartModel.m */; };
-		1B90B7F11D563A2700B8EF28 /* FDCostBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B90B7E71D563A2700B8EF28 /* FDCostBarView.m */; };
-		1B90B7F21D563A2700B8EF28 /* FDShopCarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B90B7E91D563A2700B8EF28 /* FDShopCarViewCell.m */; };
 		1B90B7F51D563A7400B8EF28 /* FDMyDiscoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B90B7F41D563A7400B8EF28 /* FDMyDiscoverController.m */; };
 		1B9623221CF004D400F5F147 /* FDDiscoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9623211CF004D400F5F147 /* FDDiscoverViewController.m */; };
 		1B9623251CF0063900F5F147 /* FDDiscoverViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9623241CF0063900F5F147 /* FDDiscoverViewCell.m */; };
@@ -56,6 +54,20 @@
 		1BB5708F1D56D4B100C433C1 /* FDMyDiscoverCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB5708E1D56D4B100C433C1 /* FDMyDiscoverCell.m */; };
 		1BB570921D56DA7C00C433C1 /* FDMyDiscoverInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570911D56DA7C00C433C1 /* FDMyDiscoverInfoController.m */; };
 		1BB570961D5717DD00C433C1 /* FDCollectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570951D5717DD00C433C1 /* FDCollectModel.m */; };
+		1BB5709F1D57279400C433C1 /* FDGoodsInfoOrderBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB5709E1D57279400C433C1 /* FDGoodsInfoOrderBar.m */; };
+		1BB570A21D57318300C433C1 /* FDPayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570A11D57318300C433C1 /* FDPayController.m */; };
+		1BB570A61D57357F00C433C1 /* FDConfirmOrderBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570A51D57357F00C433C1 /* FDConfirmOrderBarView.m */; };
+		1BB570A91D5735FC00C433C1 /* FDOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570A81D5735FC00C433C1 /* FDOrderCell.m */; };
+		1BB570AF1D573F3F00C433C1 /* FDCostBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570AC1D573F3F00C433C1 /* FDCostBarView.m */; };
+		1BB570B01D573F3F00C433C1 /* FDShopCarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570AE1D573F3F00C433C1 /* FDShopCarViewCell.m */; };
+		1BB570B61D576B7500C433C1 /* FDOrderAddressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570B51D576B7500C433C1 /* FDOrderAddressCell.m */; };
+		1BB570B91D5775F900C433C1 /* FDSelectAddressController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570B81D5775F900C433C1 /* FDSelectAddressController.m */; };
+		1BB570BF1D577BA800C433C1 /* FDMyOrdersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570BE1D577BA800C433C1 /* FDMyOrdersController.m */; };
+		1BB570C31D577EF300C433C1 /* FDOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570C21D577EF300C433C1 /* FDOrderModel.m */; };
+		1BB570C61D57895600C433C1 /* FDMyOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB570C51D57895600C433C1 /* FDMyOrderCell.m */; };
+		1BBAF1811D580C83005758D8 /* FDImageBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAF1801D580C83005758D8 /* FDImageBarView.m */; };
+		1BBAF1841D581D0C005758D8 /* FDMyOrderInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAF1831D581D0C005758D8 /* FDMyOrderInfoController.m */; };
+		1BBAF1881D581EBB005758D8 /* FDStatusBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAF1871D581EBB005758D8 /* FDStatusBarView.m */; };
 		1BC841431D502BFE00DCBFAF /* FDAboutMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC841331D502BFE00DCBFAF /* FDAboutMeViewController.m */; };
 		1BC841451D502BFE00DCBFAF /* FDMyCollectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8413A1D502BFE00DCBFAF /* FDMyCollectViewController.m */; };
 		1BC841541D502C4700DCBFAF /* FDSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC841531D502C4700DCBFAF /* FDSettingViewController.m */; };
@@ -139,10 +151,6 @@
 		1B90B7E11D563A2700B8EF28 /* FDShopCarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDShopCarViewController.m; sourceTree = "<group>"; };
 		1B90B7E31D563A2700B8EF28 /* FDShoppingCartModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDShoppingCartModel.h; sourceTree = "<group>"; };
 		1B90B7E41D563A2700B8EF28 /* FDShoppingCartModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDShoppingCartModel.m; sourceTree = "<group>"; };
-		1B90B7E61D563A2700B8EF28 /* FDCostBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCostBarView.h; sourceTree = "<group>"; };
-		1B90B7E71D563A2700B8EF28 /* FDCostBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCostBarView.m; sourceTree = "<group>"; };
-		1B90B7E81D563A2700B8EF28 /* FDShopCarViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDShopCarViewCell.h; sourceTree = "<group>"; };
-		1B90B7E91D563A2700B8EF28 /* FDShopCarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDShopCarViewCell.m; sourceTree = "<group>"; };
 		1B90B7F31D563A7400B8EF28 /* FDMyDiscoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMyDiscoverController.h; sourceTree = "<group>"; };
 		1B90B7F41D563A7400B8EF28 /* FDMyDiscoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMyDiscoverController.m; sourceTree = "<group>"; };
 		1B9623201CF004D400F5F147 /* FDDiscoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDDiscoverViewController.h; sourceTree = "<group>"; };
@@ -180,6 +188,34 @@
 		1BB570911D56DA7C00C433C1 /* FDMyDiscoverInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMyDiscoverInfoController.m; sourceTree = "<group>"; };
 		1BB570941D5717DD00C433C1 /* FDCollectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCollectModel.h; sourceTree = "<group>"; };
 		1BB570951D5717DD00C433C1 /* FDCollectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCollectModel.m; sourceTree = "<group>"; };
+		1BB5709D1D57279400C433C1 /* FDGoodsInfoOrderBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDGoodsInfoOrderBar.h; path = Home/View/GoodsInfoView/FDGoodsInfoOrderBar.h; sourceTree = "<group>"; };
+		1BB5709E1D57279400C433C1 /* FDGoodsInfoOrderBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDGoodsInfoOrderBar.m; path = Home/View/GoodsInfoView/FDGoodsInfoOrderBar.m; sourceTree = "<group>"; };
+		1BB570A01D57318300C433C1 /* FDPayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDPayController.h; sourceTree = "<group>"; };
+		1BB570A11D57318300C433C1 /* FDPayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDPayController.m; sourceTree = "<group>"; };
+		1BB570A41D57357F00C433C1 /* FDConfirmOrderBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDConfirmOrderBarView.h; sourceTree = "<group>"; };
+		1BB570A51D57357F00C433C1 /* FDConfirmOrderBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDConfirmOrderBarView.m; sourceTree = "<group>"; };
+		1BB570A71D5735FC00C433C1 /* FDOrderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDOrderCell.h; sourceTree = "<group>"; };
+		1BB570A81D5735FC00C433C1 /* FDOrderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDOrderCell.m; sourceTree = "<group>"; };
+		1BB570AB1D573F3F00C433C1 /* FDCostBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCostBarView.h; sourceTree = "<group>"; };
+		1BB570AC1D573F3F00C433C1 /* FDCostBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCostBarView.m; sourceTree = "<group>"; };
+		1BB570AD1D573F3F00C433C1 /* FDShopCarViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDShopCarViewCell.h; sourceTree = "<group>"; };
+		1BB570AE1D573F3F00C433C1 /* FDShopCarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDShopCarViewCell.m; sourceTree = "<group>"; };
+		1BB570B41D576B7500C433C1 /* FDOrderAddressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDOrderAddressCell.h; sourceTree = "<group>"; };
+		1BB570B51D576B7500C433C1 /* FDOrderAddressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDOrderAddressCell.m; sourceTree = "<group>"; };
+		1BB570B71D5775F900C433C1 /* FDSelectAddressController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSelectAddressController.h; sourceTree = "<group>"; };
+		1BB570B81D5775F900C433C1 /* FDSelectAddressController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSelectAddressController.m; sourceTree = "<group>"; };
+		1BB570BD1D577BA800C433C1 /* FDMyOrdersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMyOrdersController.h; sourceTree = "<group>"; };
+		1BB570BE1D577BA800C433C1 /* FDMyOrdersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMyOrdersController.m; sourceTree = "<group>"; };
+		1BB570C11D577EF300C433C1 /* FDOrderModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDOrderModel.h; sourceTree = "<group>"; };
+		1BB570C21D577EF300C433C1 /* FDOrderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDOrderModel.m; sourceTree = "<group>"; };
+		1BB570C41D57895600C433C1 /* FDMyOrderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMyOrderCell.h; sourceTree = "<group>"; };
+		1BB570C51D57895600C433C1 /* FDMyOrderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMyOrderCell.m; sourceTree = "<group>"; };
+		1BBAF17F1D580C83005758D8 /* FDImageBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDImageBarView.h; sourceTree = "<group>"; };
+		1BBAF1801D580C83005758D8 /* FDImageBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDImageBarView.m; sourceTree = "<group>"; };
+		1BBAF1821D581D0C005758D8 /* FDMyOrderInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMyOrderInfoController.h; sourceTree = "<group>"; };
+		1BBAF1831D581D0C005758D8 /* FDMyOrderInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMyOrderInfoController.m; sourceTree = "<group>"; };
+		1BBAF1861D581EBB005758D8 /* FDStatusBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDStatusBarView.h; sourceTree = "<group>"; };
+		1BBAF1871D581EBB005758D8 /* FDStatusBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDStatusBarView.m; sourceTree = "<group>"; };
 		1BC841321D502BFE00DCBFAF /* FDAboutMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDAboutMeViewController.h; sourceTree = "<group>"; };
 		1BC841331D502BFE00DCBFAF /* FDAboutMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDAboutMeViewController.m; sourceTree = "<group>"; };
 		1BC841391D502BFE00DCBFAF /* FDMyCollectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMyCollectViewController.h; sourceTree = "<group>"; };
@@ -320,6 +356,8 @@
 				1BC8CCA31CEF4199006B6924 /* FDGoodsRemarkView.m */,
 				1BC8CCA51CEF4AB4006B6924 /* FDGoodInfoBarView.h */,
 				1BC8CCA61CEF4AB4006B6924 /* FDGoodInfoBarView.m */,
+				1BB5709D1D57279400C433C1 /* FDGoodsInfoOrderBar.h */,
+				1BB5709E1D57279400C433C1 /* FDGoodsInfoOrderBar.m */,
 			);
 			name = GoodsInfoView;
 			sourceTree = "<group>";
@@ -388,6 +426,7 @@
 				1BC841621D5038D800DCBFAF /* FDCellItem.m */,
 				1B00D82F1D54DAC800228D39 /* FDLoginViewCell.h */,
 				1B00D8301D54DAC800228D39 /* FDLoginViewCell.m */,
+				1BB570BA1D577B8200C433C1 /* MyOrders */,
 				1B90B7D01D563A2700B8EF28 /* MyDiscover */,
 				1B90B7DE1D563A2700B8EF28 /* shopCar */,
 				1BC841641D503FD300DCBFAF /* Address */,
@@ -441,6 +480,10 @@
 			children = (
 				1B90B7E01D563A2700B8EF28 /* FDShopCarViewController.h */,
 				1B90B7E11D563A2700B8EF28 /* FDShopCarViewController.m */,
+				1BB570A01D57318300C433C1 /* FDPayController.h */,
+				1BB570A11D57318300C433C1 /* FDPayController.m */,
+				1BB570B71D5775F900C433C1 /* FDSelectAddressController.h */,
+				1BB570B81D5775F900C433C1 /* FDSelectAddressController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -457,10 +500,8 @@
 		1B90B7E51D563A2700B8EF28 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1B90B7E61D563A2700B8EF28 /* FDCostBarView.h */,
-				1B90B7E71D563A2700B8EF28 /* FDCostBarView.m */,
-				1B90B7E81D563A2700B8EF28 /* FDShopCarViewCell.h */,
-				1B90B7E91D563A2700B8EF28 /* FDShopCarViewCell.m */,
+				1BB570AA1D573F3F00C433C1 /* ShoppingCartViews */,
+				1BB570A31D57354B00C433C1 /* PayViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -642,6 +683,81 @@
 				1BB570951D5717DD00C433C1 /* FDCollectModel.m */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		1BB570A31D57354B00C433C1 /* PayViews */ = {
+			isa = PBXGroup;
+			children = (
+				1BB570A41D57357F00C433C1 /* FDConfirmOrderBarView.h */,
+				1BB570A51D57357F00C433C1 /* FDConfirmOrderBarView.m */,
+				1BB570A71D5735FC00C433C1 /* FDOrderCell.h */,
+				1BB570A81D5735FC00C433C1 /* FDOrderCell.m */,
+				1BB570B41D576B7500C433C1 /* FDOrderAddressCell.h */,
+				1BB570B51D576B7500C433C1 /* FDOrderAddressCell.m */,
+			);
+			path = PayViews;
+			sourceTree = "<group>";
+		};
+		1BB570AA1D573F3F00C433C1 /* ShoppingCartViews */ = {
+			isa = PBXGroup;
+			children = (
+				1BB570AB1D573F3F00C433C1 /* FDCostBarView.h */,
+				1BB570AC1D573F3F00C433C1 /* FDCostBarView.m */,
+				1BB570AD1D573F3F00C433C1 /* FDShopCarViewCell.h */,
+				1BB570AE1D573F3F00C433C1 /* FDShopCarViewCell.m */,
+			);
+			path = ShoppingCartViews;
+			sourceTree = "<group>";
+		};
+		1BB570BA1D577B8200C433C1 /* MyOrders */ = {
+			isa = PBXGroup;
+			children = (
+				1BB570C01D577ED300C433C1 /* Models */,
+				1BB570BB1D577B8200C433C1 /* Controllers */,
+				1BB570BC1D577B8200C433C1 /* Views */,
+			);
+			path = MyOrders;
+			sourceTree = "<group>";
+		};
+		1BB570BB1D577B8200C433C1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1BB570BD1D577BA800C433C1 /* FDMyOrdersController.h */,
+				1BB570BE1D577BA800C433C1 /* FDMyOrdersController.m */,
+				1BBAF1821D581D0C005758D8 /* FDMyOrderInfoController.h */,
+				1BBAF1831D581D0C005758D8 /* FDMyOrderInfoController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1BB570BC1D577B8200C433C1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1BBAF1851D581E9C005758D8 /* OrderInfoView */,
+				1BB570C41D57895600C433C1 /* FDMyOrderCell.h */,
+				1BB570C51D57895600C433C1 /* FDMyOrderCell.m */,
+				1BBAF17F1D580C83005758D8 /* FDImageBarView.h */,
+				1BBAF1801D580C83005758D8 /* FDImageBarView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1BB570C01D577ED300C433C1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1BB570C11D577EF300C433C1 /* FDOrderModel.h */,
+				1BB570C21D577EF300C433C1 /* FDOrderModel.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1BBAF1851D581E9C005758D8 /* OrderInfoView */ = {
+			isa = PBXGroup;
+			children = (
+				1BBAF1861D581EBB005758D8 /* FDStatusBarView.h */,
+				1BBAF1871D581EBB005758D8 /* FDStatusBarView.m */,
+			);
+			path = OrderInfoView;
 			sourceTree = "<group>";
 		};
 		1BC841301D502BFE00DCBFAF /* AboutMe */ = {
@@ -976,15 +1092,19 @@
 				1B96232F1CF0641A00F5F147 /* FDAddDiscoverView.m in Sources */,
 				1BC841541D502C4700DCBFAF /* FDSettingViewController.m in Sources */,
 				1B9AE7771CE8BA5200BF48F3 /* FDBaseNavigationController.m in Sources */,
-				1B90B7F11D563A2700B8EF28 /* FDCostBarView.m in Sources */,
-				1B90B7F21D563A2700B8EF28 /* FDShopCarViewCell.m in Sources */,
+				1BB570A61D57357F00C433C1 /* FDConfirmOrderBarView.m in Sources */,
 				1B9B03BA1CEA214A00FF1997 /* FDBaseTabBarController.m in Sources */,
 				1BC841451D502BFE00DCBFAF /* FDMyCollectViewController.m in Sources */,
+				1BB570AF1D573F3F00C433C1 /* FDCostBarView.m in Sources */,
 				1B20F0A51CECAEFC007FEE14 /* UIImageView+FDExtension.m in Sources */,
 				1B8F5EF41D507CF300071F41 /* FDAddrEditView.m in Sources */,
 				1BFB1C781D48F5810068E89B /* FDPhotoViewCell.m in Sources */,
+				1BB570B61D576B7500C433C1 /* FDOrderAddressCell.m in Sources */,
+				1BB570B91D5775F900C433C1 /* FDSelectAddressController.m in Sources */,
 				1B0DECED1CEDFC2E00C3F6C2 /* FDGoodsInfoView.m in Sources */,
+				1BB570BF1D577BA800C433C1 /* FDMyOrdersController.m in Sources */,
 				1B9623221CF004D400F5F147 /* FDDiscoverViewController.m in Sources */,
+				1BB570C61D57895600C433C1 /* FDMyOrderCell.m in Sources */,
 				1BC8CCB11CEF5B8C006B6924 /* FDSelectInfoView.m in Sources */,
 				1BC8CCAB1CEF5844006B6924 /* FDGoodsSelectBarView.m in Sources */,
 				1BC8CCA41CEF4199006B6924 /* FDGoodsRemarkView.m in Sources */,
@@ -994,21 +1114,28 @@
 				1B9B03B41CEA0C2900FF1997 /* FDBaseViewController.m in Sources */,
 				1B9AE74C1CE8ACDA00BF48F3 /* AppDelegate.m in Sources */,
 				1BC841741D5040F900DCBFAF /* FDAddressModel.m in Sources */,
+				1BB570B01D573F3F00C433C1 /* FDShopCarViewCell.m in Sources */,
+				1BB5709F1D57279400C433C1 /* FDGoodsInfoOrderBar.m in Sources */,
 				1B5307C71CEB68CE003B1B92 /* FDGoodsModel.m in Sources */,
 				1BFB1C731D48F5810068E89B /* FDPhotoViewController.m in Sources */,
 				1B5307C01CEB58F9003B1B92 /* MBProgressHUD.m in Sources */,
 				1B9623321CF064BE00F5F147 /* FDAddDiscoverViewController.m in Sources */,
 				1B20F0A31CECAEFC007FEE14 /* NSString+FDExtension.m in Sources */,
 				1B117B9B1CF34B2500BD420C /* FDHomeNetworkTool.m in Sources */,
+				1BBAF1841D581D0C005758D8 /* FDMyOrderInfoController.m in Sources */,
 				1BC841631D5038D800DCBFAF /* FDCellItem.m in Sources */,
+				1BBAF1881D581EBB005758D8 /* FDStatusBarView.m in Sources */,
 				1BC8416D1D50406F00DCBFAF /* FDAddressCell.m in Sources */,
 				1BFB1C771D48F5810068E89B /* FDAblumCollectionViewCell.m in Sources */,
 				1B5307BE1CEB58F9003B1B92 /* MBProgressHUD+MJ.m in Sources */,
+				1BBAF1811D580C83005758D8 /* FDImageBarView.m in Sources */,
 				1B20F0A41CECAEFC007FEE14 /* UIImage+FDExtension.m in Sources */,
+				1BB570A21D57318300C433C1 /* FDPayController.m in Sources */,
 				1BFB1C721D48F5810068E89B /* FDAblumViewController.m in Sources */,
 				1B9AE7491CE8ACDA00BF48F3 /* main.m in Sources */,
 				1BC8416A1D50401300DCBFAF /* FDAddressViewController.m in Sources */,
 				1BC841771D50440500DCBFAF /* FDAddressEditController.m in Sources */,
+				1BB570C31D577EF300C433C1 /* FDOrderModel.m in Sources */,
 				1B5307CB1CEB6C2C003B1B92 /* FDGoodsInfoController.m in Sources */,
 				1B9B03B71CEA0C9300FF1997 /* FDHomeViewController.m in Sources */,
 				1B19932B1D53759700D0C75C /* FDUserInfo.m in Sources */,
@@ -1023,6 +1150,7 @@
 				1B5307C41CEB5906003B1B92 /* FDMBProgressHUB.m in Sources */,
 				1B90B7F51D563A7400B8EF28 /* FDMyDiscoverController.m in Sources */,
 				1BC8CCAE1CEF585B006B6924 /* FDHomeCollectionViewCell.m in Sources */,
+				1BB570A91D5735FC00C433C1 /* FDOrderCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

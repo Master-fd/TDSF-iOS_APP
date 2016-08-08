@@ -43,15 +43,15 @@
     
     self.nameView = [[FDAddrEditView alloc] init];
     [self.view addSubview:self.nameView];
-    self.nameView.nameLab.text = @"联系人";
+    self.nameView.nameLab.text = @"联 系 人:";
     
     self.numberView = [[FDAddrEditView alloc] init];
     [self.view addSubview:self.numberView];
-    self.numberView.nameLab.text = @"手机号码";
+    self.numberView.nameLab.text = @"手机号码:";
     
     self.addressView = [[FDAddrEditView alloc] init];
     [self.view addSubview:self.addressView];
-    self.addressView.nameLab.text = @"详细地址";
+    self.addressView.nameLab.text = @"详细地址:";
     
     
 }
@@ -83,7 +83,7 @@
 {
     [self.view endEditing:YES];
     __weak typeof(self) _weakSelf = self;
-    if (self.isAddAddress) {
+    if (self.isAddAddress) { //添加地址
         FDAddressModel *address = [[FDAddressModel alloc] init];
         address.contact = self.nameView.nameTextView.text;
         address.number = self.numberView.nameTextView.text;
@@ -94,7 +94,7 @@
             [_weakSelf.navigationController popViewControllerAnimated:YES];
         }];
         
-    }else{
+    }else{  //修改地址
         self.model.contact = self.nameView.nameTextView.text;
         self.model.number = self.numberView.nameTextView.text;
         self.model.address = self.addressView.nameTextView.text;

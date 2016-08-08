@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
     
-    self.navigationController.title = @"买家秀";
+    self.navigationItem.title = @"买家秀";
 }
 
 - (void)setupViews
@@ -90,7 +90,7 @@
     _contentTextView = [[UITextView alloc] init];
     [self.view addSubview:_contentTextView];
     _contentTextView.textColor = kBlackColor;
-    _contentTextView.backgroundColor = kFrenchGreyColor;
+    _contentTextView.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1];
     _contentTextView.font = [UIFont systemFontOfSize:16];
     _contentTextView.userInteractionEnabled = NO;
     _contentTextView.scrollEnabled = NO;
