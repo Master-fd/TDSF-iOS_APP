@@ -141,6 +141,7 @@
         NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
         NSString *message = [responseObject objectForKey:kMessageKey];
         NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
+
         if (statusCode == networdStatusSuccess) {
             //成功
             NSMutableArray *arrayM = [NSMutableArray array];
@@ -566,6 +567,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[kContentKey] = content;  //文字内容,需要服务器配合
     params[kNameKey] = name;
+    
     [manager POST:kAddDiscoverAddr parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
         /*
@@ -575,16 +577,16 @@
          3. 要保存在服务器上的[文件名]
          4. 上传文件的[mimeType]
          */
-        NSData *data = UIImageJPEGRepresentation(image, 1.0);
-        
-        [formData appendPartWithFileData:data name:@"contentImage" fileName:@"image.jpg" mimeType:@"image/jpg"];
+        //图片不能太大，服务器里可以设置可以接收的大小，所以需要压缩
+
+        NSData *data = UIImageJPEGRepresentation(image, 0.8);
+        [formData appendPartWithFileData:data name:@"contentImage" fileName:@"image.jpeg" mimeType:@"image/jpeg"];
         
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
         NSString *message = [responseObject objectForKey:kMessageKey];
         NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
-        
         if (statusCode == networdStatusSuccess) {
             if (requireSuccessBlock) {
                 requireSuccessBlock(data);
@@ -670,7 +672,7 @@
         NSInteger statusCode = [[responseObject objectForKey:kCodeKey] integerValue];
         NSString *message = [responseObject objectForKey:kMessageKey];
         NSArray *data = [responseObject objectForKeyedSubscript:kDataKey];
-        
+
         if (statusCode == networdStatusSuccess) {
             //注册成功
             if (requireSuccessBlock) {
@@ -752,6 +754,71 @@
 
 
 
+/**
+ *  发送get请求，获取指定的goods数据
+ */
++ (void)getGoodsWithModel:(FDGoodsModel *)model success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock
+{
+    //发送get请求，返回json数据
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];  //可接受text/html格式
+    manager.requestSerializer.timeoutInterval = 3;
+    
+    NSDictionary *params = @{@"id" : model.ID,
+                             @"name" : model.name};
+    //发送请求
+    [manager GET:kGoodsRequireAddr parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        /**
+         *  返回的就是dict， 保存到array, 开始刷新collectionview
+         */
+        if (responseObject) {
+            
+            NSMutableArray *arrayM = [NSMutableArray array];
+            //字典转模型
+            for (NSDictionary *dict in responseObject) {
+                
+                FDGoodsModel *model = [[FDGoodsModel alloc] init];
+                model.ID = dict[kGoodsidKey];
+                model.name = dict[kGoodsnameKey];
+                model.price = dict[kGoodspriceKey];
+                model.subClass = dict[kGoodssubClassKey];
+                model.sex = dict[kGoodssexKey];
+                model.minImageUrl1 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsminImageUrl1Key]];
+                model.minImageUrl2 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsminImageUrl2Key]];
+                model.minImageUrl3 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsminImageUrl3Key]];
+                model.descImageUrl1 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsdescImageUrl1Key]];
+                model.descImageUrl2 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsdescImageUrl2Key]];
+                model.descImageUrl3 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsdescImageUrl3Key]];
+                model.descImageUrl4 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsdescImageUrl4Key]];
+                model.descImageUrl5 = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsdescImageUrl5Key]];
+                model.aboutImageUrl = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsaboutImageUrlKey]];
+                model.sizeImageUrl = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodssizeImageUrlKey]];
+                model.remarkImageUrl = [NSString stringWithFormat:@"%@%@", kServerHostAddr, dict[kGoodsremarkImageUrlKey]];
+                
+                [arrayM insertObject:model atIndex:0];
+                
+            }
+            
+            if (arrayM.count) {
+                if (requireSuccessBlock) {   //请求成功之后，执行block
+                    requireSuccessBlock(arrayM);
+                }
+            } else {
+                if (requireFailureBlock) { //没有数据
+                    requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+                }
+            }
+            
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (requireFailureBlock) {
+            requireFailureBlock(kUnknownNetwordStatusCode, kUnknownNetwordMessage);
+        }
+    }];
+}
 
 
 @end

@@ -63,14 +63,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-        [self setupNav];
+    [self setupNav];
         
-        [self setupViews];
-        
-        [self setupContraints];
-        
-        [self infoView]; //默认进入info 界面
-    
     
     
 }
@@ -341,6 +335,22 @@
 - (void)setModel:(FDGoodsModel *)model
 {
     _model = model;
+    //先判断这个数据是否在服务器的goods表中已经被删除，如果被删除，说明是失效的商品
+    //因为，如果是在购物车或者收藏中进来的，则有可能这个商品已经失效了,所以要先判断
+    __weak typeof(self) _weakSelf = self;
+    [FDHomeNetworkTool getGoodsWithModel:model success:^(NSArray *results) {
+        //有指定数据,说明这个数据是有效的
+        if (!_bgScrollView) {
+            [_weakSelf setupViews];
+            
+            [_weakSelf setupContraints];
+            
+            [_weakSelf infoView]; //默认进入info 界面
+        }
+    } failure:^(NSInteger statusCode, NSString *message) {
+        //没有数据，说明这个数据已经过期了
+        [FDMBProgressHUB showError:@"对不起,商品已过期"];
+    }];
     
 }
 @end

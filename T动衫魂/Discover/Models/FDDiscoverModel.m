@@ -13,6 +13,7 @@
 
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
+    self.ID = dict[kIdKey];
     self.content = dict[kContentKey];
     self.name = dict[kNameKey];
     self.contentImageUrl = [NSString stringWithFormat:@"%@%@", kServerHostAddr, [dict objectForKey:kImageUrlKey]];

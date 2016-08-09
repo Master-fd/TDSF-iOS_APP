@@ -47,6 +47,7 @@ typedef void(^requiresFailureResultBlock)(NSInteger statusCode, NSString *messag
 @class FDAddressModel;
 @class FDShoppingCartModel;
 @class FDOrderModel;
+@class FDGoodsModel;
 @interface FDHomeNetworkTool : NSObject
 
 
@@ -100,6 +101,10 @@ typedef void(^requiresFailureResultBlock)(NSInteger statusCode, NSString *messag
  */
 + (void)userRegisterWithName:(NSString *)name password:(NSString *)password success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock;
 
+/**
+ *  发送get请求，获取指定的goods数据
+ */
++ (void)getGoodsWithModel:(FDGoodsModel *)model success:(requiresSuccessResultBlock )requireSuccessBlock failure:(requiresFailureResultBlock )requireFailureBlock;
 
 /**
  *  发送get请求，获取goods数据

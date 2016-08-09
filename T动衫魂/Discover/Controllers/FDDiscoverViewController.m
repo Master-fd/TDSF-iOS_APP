@@ -45,8 +45,6 @@
     
     [self setupViews];
     
-    [self dropDownLoadMoreDiscovers];
-    
 }
 
 - (void)setupNav
@@ -100,7 +98,12 @@
 
 }
 
-
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self dropDownLoadMoreDiscovers];
+}
 /**
  *  下拉刷新最新数据
  */
@@ -114,12 +117,25 @@
     self.idPageNow = 0;
     __weak typeof(self) _weakSelf = self;
     [FDHomeNetworkTool getDiscoversWithParams:params dropUp:NO success:^(NSArray *results) {
-        [_weakSelf.dataSource removeAllObjects];
-        [_weakSelf.tableView reloadData];
-        [_weakSelf addMoreRowForTableView:results dropUp:NO];
-        _weakSelf.idPageNow ++;   //页数增加
+        FDDiscoverModel *newModelTop = [results firstObject];
+        FDDiscoverModel *newModelBotton = [results lastObject];
+        FDDiscoverModel *oldModelTop = [_weakSelf.dataSource firstObject];
+        FDDiscoverModel *oldModelBotton = [_weakSelf.dataSource lastObject];
+        
+        if ([oldModelTop.ID isEqualToString:newModelTop.ID]
+            && [oldModelBotton.ID isEqualToString:newModelBotton.ID]
+            && (results.count == _weakSelf.dataSource.count)) {
+            //说明没有更新,不变
+        } else {
+            [_weakSelf.dataSource removeAllObjects];
+            [_weakSelf.tableView reloadData];
+            [_weakSelf addMoreRowForTableView:results dropUp:NO];
+            _weakSelf.idPageNow ++;   //页数增加
+        }
+        
     } failure:^(NSInteger statusCode, NSString *message) {
         
+
     }];
     
     [self.tableView.mj_header endRefreshing];
@@ -325,7 +341,6 @@
     };
     
     vc.hidesBottomBarWhenPushed = YES;
-    //        vc.image = [image imageWithSize:CGSizeMake(480, 600) equal:YES];  //从定义一下大小
     vc.image = image; //直接全屏图
     //前往发布朋友圈
     [self.navigationController pushViewController:vc animated:YES];
@@ -338,8 +353,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
-    NSData *imageData = UIImageJPEGRepresentation(originalImage, 1);  //转换一下，图片会更加小,适合上传
-    UIImage *image = [UIImage imageWithData:imageData];
+    UIImage *image = [originalImage imageWithSize:[UIScreen mainScreen].bounds.size equal:NO]; //全屏图
     
     //前往发布朋友圈
     [self gotoAddDiscoverWithImage:image];

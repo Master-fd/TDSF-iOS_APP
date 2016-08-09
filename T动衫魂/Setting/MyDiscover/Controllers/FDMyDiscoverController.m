@@ -110,6 +110,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             });
+
         } failure:nil];
 
         

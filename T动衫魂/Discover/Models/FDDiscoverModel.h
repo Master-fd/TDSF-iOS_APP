@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#define kIdKey          @"id"
 #define kNameKey     @"name"
 #define kContentKey     @"content"
 #define kImageUrlKey    @"contentImageUrl"
@@ -15,6 +16,7 @@
 
 @interface FDDiscoverModel : NSObject
 
+@property (nonatomic, copy) NSString *ID;
 /**
  *  账户
  */
